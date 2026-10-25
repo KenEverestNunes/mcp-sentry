@@ -45,7 +45,16 @@ files = ["src"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
+addopts = "--cov=src/mcp_sentry --cov-report=term-missing"
 testpaths = ["tests"]
+
+[tool.coverage.run]
+source = ["src/mcp_sentry"]
 
 [tool.anyio]
 backend = "asyncio"
+
+[dependency-groups]
+dev = [
+    "pytest-cov>=7.1.0",
+]

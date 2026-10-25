@@ -11,5 +11,8 @@ lint:
 test:
 	uv run pytest tests/ -v
 
+test-cov:
+	uv run pytest --cov=src/mcp_sentry --cov-report=term-missing --cov-report=html
+
 run:
 	uv run uvicorn mcp_sentry.api.main:app --reload

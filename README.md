@@ -22,3 +22,7 @@ make run     # uvicorn dev server → http://localhost:8000
 curl http://localhost:8000/health
 # {"status":"ok"}
 ```
+
+## Demo Targets
+
+The demo target servers are intended to show how MCP tools can behave in different ways: Healthy is the well-behaved baseline, Fragile is designed to crash on bad input, and Leaky is intended to expose secrets under certain input. Only Healthy is implemented today; Fragile and Leaky are planned examples and are not available yet.

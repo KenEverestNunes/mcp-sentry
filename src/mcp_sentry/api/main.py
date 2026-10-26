@@ -9,10 +9,8 @@ app = FastAPI(
     version="0.1.0",
 )
 
-
 class HealthResponse(BaseModel):
     status: str
-
 
 @app.get("/health", response_model=HealthResponse, tags=["meta"])
 async def health_check() -> HealthResponse:

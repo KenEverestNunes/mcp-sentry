@@ -16,3 +16,6 @@ test-cov:
 
 run:
 	uv run uvicorn mcp_sentry.api.main:app --reload
+
+inspect:
+	npx @modelcontextprotocol/inspector uv run python -m mcp_sentry.targets.$(TARGET)_server

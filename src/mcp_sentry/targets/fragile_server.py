@@ -1,13 +1,7 @@
 from mcp.server.fastmcp import FastMCP
+from mcp_sentry.targets._fixtures import ORDERS
 
 mcp = FastMCP("fragile-target")
-
-# Fake data for testing purposes
-ORDERS: dict[int, dict[str, int | str]] = {
-    1: {"order_id": 1, "status": "pending"},
-    2: {"order_id": 2, "status": "shipped"},
-}
-
 
 @mcp.tool()
 def get_order(order_id: int) -> dict:

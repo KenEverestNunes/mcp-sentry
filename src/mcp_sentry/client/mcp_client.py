@@ -3,7 +3,8 @@ from contextlib import AsyncExitStack
 from typing import Any
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
-from mcp_sentry.models.schemas import ToolSchema
+from mcp.shared.exceptions import McpError
+from mcp_sentry.models.schemas import ToolCallResult, ToolSchema
 
 
 class MCPConnectionError(RuntimeError):
@@ -70,6 +71,48 @@ class MCPClient:
             )
             for tool in result.tools
         ]
+
+    async def call_tool(self, name: str, arguments: dict[str, Any]) -> ToolCallResult:
+        if self.session is None:
+            raise MCPConnectionError("Connect to an MCP server before calling tools.")
+
+        try:
+            if not self._initialized:
+                await asyncio.wait_for(self.session.initialize(), timeout=5)
+                self._initialized = True
+            try:
+                result = await self.session.call_tool(name, arguments)
+            except McpError as exc:
+                return ToolCallResult(
+                    success=False,
+                    content=None,
+                    error=str(exc),
+                    raw_exception_text=str(exc),
+                )
+            print(result.model_dump())
+        except TimeoutError as exc:
+            await self.close()
+            raise MCPConnectionError("Timed out while initializing the MCP server.") from exc
+        except (FileNotFoundError, BrokenPipeError, OSError) as exc:
+            await self.close()
+            raise MCPConnectionError(
+                "The MCP server exited during initialization or discovery."
+            ) from exc
+
+        if result.isError:
+            return ToolCallResult(
+                success=False,
+                content=result.content,
+                error=result.content[0].text,
+                raw_exception_text=result.content[0].text,
+            )
+        else:
+            return ToolCallResult(
+                success=True,
+                content=result.content,
+                error=None,
+                raw_exception_text=None,
+            )
 
     async def close(self) -> None:
         await self._stack.aclose()

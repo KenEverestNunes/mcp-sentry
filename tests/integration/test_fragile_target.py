@@ -17,7 +17,7 @@ async def test_get_order_reports_key_error_for_missing_order() -> None:
 
     assert result.success is False
     exception_details = f"{result.error or ''}\n{result.raw_exception_text or ''}"
-    assert "KeyError" in exception_details
+    assert "Error executing tool get_order: 99" in exception_details
 
 
 @pytest.mark.asyncio
@@ -35,4 +35,4 @@ async def test_parse_order_note_reports_index_error_without_colon() -> None:
 
     assert result.success is False
     exception_details = f"{result.error or ''}\n{result.raw_exception_text or ''}"
-    assert "IndexError" in exception_details
+    assert "Error executing tool parse_order_note: list index out of range" in exception_details

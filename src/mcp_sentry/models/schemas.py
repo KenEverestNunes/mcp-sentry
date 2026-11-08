@@ -12,3 +12,8 @@ class ToolCallResult(BaseModel):
     error: str | None
     raw_exception_text: str | None
 
+class FuzzCase(BaseModel):
+    tool_name: str
+    arguments: dict[str, Any]
+    result:ToolCallResult
+

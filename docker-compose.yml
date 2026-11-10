@@ -1,0 +1,24 @@
+services:
+  healthy:
+    build:
+      context: .
+      dockerfile: docker/targets/Dockerfile.healthy
+    image: mcp-sentry/healthy:local
+    stdin_open: true
+    tty: true
+
+  fragile:
+    build:
+      context: .
+      dockerfile: docker/targets/Dockerfile.fragile
+    image: mcp-sentry/fragile:local
+    stdin_open: true
+    tty: true
+
+  leaky:
+    build:
+      context: .
+      dockerfile: docker/targets/Dockerfile.leaky
+    image: mcp-sentry/leaky:local
+    stdin_open: true
+    tty: true

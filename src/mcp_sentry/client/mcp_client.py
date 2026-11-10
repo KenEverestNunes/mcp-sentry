@@ -5,7 +5,8 @@ from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from mcp.shared.exceptions import McpError
 from mcp_sentry.models.schemas import ToolCallResult, ToolSchema
-
+from mcp_sentry.sandbox.docker_runner import ContainerHandle
+from mcp_sentry.sandbox.docker_transport import docker_socket_client
 
 class MCPConnectionError(RuntimeError):
     """Raised when an MCP server cannot be started or initialized."""
@@ -18,6 +19,21 @@ class MCPClient:
         self._stack = AsyncExitStack()
         self.session: ClientSession | None = None
         self._initialized = False
+
+    async def connect_to_container(self, handle: ContainerHandle) -> None:
+        if self.session is not None:
+            return
+        self._stack = AsyncExitStack()
+        try:
+            read_stream, write_stream = await self._stack.enter_async_context(
+                docker_socket_client(handle)
+            )
+            self.session = await self._stack.enter_async_context(
+                ClientSession(read_stream, write_stream)
+            )
+        except OSError as exc:
+            await self.close()
+            raise MCPConnectionError("Could not connect to the sandboxed container.") from exc
 
     async def connect(self, command: str | None = None, args: list[str] | None = None) -> None:
         if self.session is not None:

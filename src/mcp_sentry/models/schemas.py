@@ -17,3 +17,11 @@ class FuzzCase(BaseModel):
     arguments: dict[str, Any]
     result:ToolCallResult
 
+class ObserverReport (BaseModel):
+    crashed: bool
+    exit_code: int | None
+    timed_out: bool
+    peak_memory_mb: float
+    peak_cpu_percent: float
+    stderr_tail: str
+

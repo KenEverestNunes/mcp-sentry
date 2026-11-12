@@ -1,5 +1,5 @@
 import asyncio
-from docker.errors import NotFound
+from docker.errors import APIError, NotFound
 from mcp_sentry.models.schemas import ObserverReport
 from mcp_sentry.sandbox.docker_runner import ContainerHandle
 
@@ -15,10 +15,13 @@ class Observer:
 
         try:
             while elapsed < timeout_s:
-                stats = await asyncio.to_thread(handle.container.stats, stream=False)
-                cpu_percent, memory_mb = self._parse_stats(stats)
-                peak_memory_mb = max(peak_memory_mb, memory_mb)
-                peak_cpu_percent = max(peak_cpu_percent, cpu_percent)
+                try:
+                    stats = await asyncio.to_thread(handle.container.stats, stream=False)
+                    cpu_percent, memory_mb = self._parse_stats(stats)
+                    peak_memory_mb = max(peak_memory_mb, memory_mb)
+                    peak_cpu_percent = max(peak_cpu_percent, cpu_percent)
+                except (ValueError, KeyError):
+                    pass  # malformed/incomplete stats response, e.g. container still starting up; skip this sample
 
                 await asyncio.to_thread(handle.container.reload)
                 if handle.container.status != "running":
@@ -41,8 +44,8 @@ class Observer:
         try:
             logs = await asyncio.to_thread(handle.container.logs, stderr=True, tail=10)
             stderr_tail = logs.decode("utf-8") if logs else ""
-        except NotFound:
-            pass  # container and its logs are gone, nothing to capture
+        except APIError:
+            pass  # container already gone or being removed (auto_remove race); no logs to capture
 
         crashed = exit_code is not None and exit_code != 0
 

@@ -923,7 +923,13 @@ dev = [
 
 [package.dev-dependencies]
 dev = [
+    { name = "httpx" },
+    { name = "mypy" },
+    { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
     { name = "pytest-cov" },
+    { name = "ruff" },
 ]
 
 [package.metadata]
@@ -944,7 +950,15 @@ requires-dist = [
 provides-extras = ["dev"]
 
 [package.metadata.requires-dev]
-dev = [{ name = "pytest-cov", specifier = ">=7.1.0" }]
+dev = [
+    { name = "httpx", specifier = ">=0.27.0" },
+    { name = "mypy", specifier = ">=1.13.0" },
+    { name = "pre-commit", specifier = ">=4.0.0" },
+    { name = "pytest", specifier = ">=8.3.0" },
+    { name = "pytest-asyncio", specifier = ">=0.24.0" },
+    { name = "pytest-cov", specifier = ">=7.1.0" },
+    { name = "ruff", specifier = ">=0.7.0" },
+]
 
 [[package]]
 name = "mypy"

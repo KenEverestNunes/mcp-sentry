@@ -1,7 +1,23 @@
 import asyncio
+import atexit
 from dataclasses import dataclass, field
 import docker
 from docker.errors import APIError, ImageNotFound, NotFound
+
+_ACTIVE_CONTAINERS: set[object] = set()
+
+
+def _cleanup_lingering_containers() -> None:
+    """Best-effort cleanup handler on process termination."""
+    for container in list(_ACTIVE_CONTAINERS):
+        try:
+            container.remove(v=True, force=True)
+        except Exception:
+            pass
+    _ACTIVE_CONTAINERS.clear()
+
+
+atexit.register(_cleanup_lingering_containers)
 
 
 class SandboxStartError(Exception):
@@ -30,8 +46,10 @@ class DockerSandbox:
                 mem_limit="256m",
                 nano_cpus=500_000_000,
                 network_disabled=True,
-                auto_remove=True,
+                auto_remove=False,
+                labels={"managed-by": "mcp-sentry"},
             )
+            _ACTIVE_CONTAINERS.add(container)
         except (APIError, ImageNotFound) as exc:
             raise SandboxStartError(
                 f"Failed to start container for image {image!r}: {exc}"
@@ -50,18 +68,28 @@ class DockerSandbox:
         await asyncio.sleep(timeout)
         try:
             await asyncio.to_thread(handle.container.kill)
-        except NotFound:
+        except (NotFound, APIError):
             pass  # already stopped normally, nothing to kill
 
     async def stop(self, handle: ContainerHandle) -> None:
-        handle.watchdog.cancel()
-        try:
-            await asyncio.to_thread(handle.container.stop)
-        except NotFound:
-            return
-        for _ in range(20):
+        if handle.watchdog:
+            handle.watchdog.cancel()
+
+        # Close attached socket if present
+        if hasattr(handle.socket, "close"):
             try:
-                await asyncio.to_thread(self.client.containers.get, handle.container.id)
-            except NotFound:
-                return
-            await asyncio.sleep(0.25)
+                handle.socket.close()
+            except Exception:
+                pass
+
+        try:
+            await asyncio.to_thread(handle.container.stop, timeout=1)
+        except (NotFound, APIError):
+            pass
+
+        try:
+            await asyncio.to_thread(handle.container.remove, v=True, force=True)
+        except (NotFound, APIError):
+            pass
+        finally:
+            _ACTIVE_CONTAINERS.discard(handle.container)

@@ -1,9 +1,9 @@
 from mcp_sentry.fuzzing.payloads import MALICIOUS_PAYLOADS
 from mcp_sentry.fuzzing.generators import DEFAULT_VALUES
 from .generators import generate_edge_cases
-from ..client import MCPClient
+from ..client import MCPClient, MCPConnectionError
 from ..config import TargetConfig
-from ..models import FuzzCase
+from ..models import FuzzCase, ToolCallResult
 
 class FuzzEngine:
     async def run(self, client: MCPClient, config: TargetConfig) -> list[FuzzCase]:
@@ -31,7 +31,15 @@ class FuzzEngine:
                 cases = [{}]  
         
             for case_args in cases:
-                result = await client.call_tool(tool.name, case_args)
+                try:
+                    result = await client.call_tool(tool.name, case_args)
+                except MCPConnectionError as exc:
+                    result = ToolCallResult(
+                        success=False,
+                        content=None,
+                        error=f"Target connection closed during call_tool: {exc}",
+                        raw_exception_text=str(exc),
+                    )
                 fuzz_cases.append(FuzzCase(tool_name=tool.name, arguments=case_args, result=result))
         
         return fuzz_cases

@@ -2,7 +2,6 @@
 
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Tests: 27 Passed](https://img.shields.io/badge/tests-27%20passed-brightgreen.svg)](tests/)
 
 An automated dynamic fuzzer and sandbox observer for Model Context Protocol (MCP) servers.
 

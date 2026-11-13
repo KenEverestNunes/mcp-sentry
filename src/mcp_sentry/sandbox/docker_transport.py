@@ -5,6 +5,8 @@ from mcp import types
 from mcp.shared.message import SessionMessage
 from mcp_sentry.sandbox.docker_runner import ContainerHandle
 
+MAX_STDIO_BUFFER_BYTES = 32 * 1024 * 1024
+
 
 @asynccontextmanager
 async def docker_socket_client(handle: ContainerHandle):
@@ -31,11 +33,17 @@ async def docker_socket_client(handle: ContainerHandle):
                 stream_type = header[0]
                 payload_size = int.from_bytes(header[4:8], "big")
                 payload = await asyncio.to_thread(_recv_exact, sock, payload_size)
+                if len(payload) < payload_size:
+                    break
 
-                if stream_type != 1:  # skip stderr(2)/stdin(0), only stdout carries JSON-RPC
+                if stream_type != 1:
                     continue
 
                 buffer += payload
+
+                if len(buffer) > MAX_STDIO_BUFFER_BYTES:
+                    break
+
                 while b"\n" in buffer:
                     line, buffer = buffer.split(b"\n", 1)
                     if not line.strip():
@@ -43,11 +51,21 @@ async def docker_socket_client(handle: ContainerHandle):
                     try:
                         message = types.JSONRPCMessage.model_validate_json(line)
                     except Exception as exc:
-                        await read_stream_writer.send(exc)
+                        try:
+                            await read_stream_writer.send(exc)
+                        except (anyio.BrokenResourceError, anyio.ClosedResourceError):
+                            return
                         continue
-                    await read_stream_writer.send(SessionMessage(message))
+                    try:
+                        await read_stream_writer.send(SessionMessage(message))
+                    except (anyio.BrokenResourceError, anyio.ClosedResourceError):
+                        return
         finally:
-            await read_stream_writer.aclose()
+            with anyio.fail_after(2, shield=True):
+                try:
+                    await read_stream_writer.aclose()
+                except Exception:
+                    pass
 
     async def socket_writer() -> None:
         try:
@@ -72,4 +90,3 @@ async def docker_socket_client(handle: ContainerHandle):
         writer_task.cancel()
         await read_stream.aclose()
         await write_stream.aclose()
-    

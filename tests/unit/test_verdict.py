@@ -177,6 +177,44 @@ def test_leak_pattern_detection(default_observer_clean: ObserverReport) -> None:
     assert "response contains a configured leak pattern" in verdict.reasons
 
 
+def test_leak_pattern_matches_json_double_quotes(default_observer_clean: ObserverReport) -> None:
+    # Rule specifically looking for JSON syntax with double quotes: "api_key": "..."
+    engine = EvaluationEngine(leak_patterns=[r'"api_key"\s*:\s*"[^"]+"'])
+    case = FuzzCase(
+        tool_name="get_credentials",
+        arguments={},
+        result=ToolCallResult(
+            success=True,
+            content={"api_key": "sk-live-secret-value-12345"},
+            error=None,
+            raw_exception_text=None,
+        ),
+    )
+    verdict = engine.evaluate(case, default_observer_clean)
+    assert verdict.passed is False
+    assert verdict.severity == "critical"
+    assert "response contains a configured leak pattern" in verdict.reasons
+
+
+def test_malformed_regex_pattern_does_not_crash(default_observer_clean: ObserverReport) -> None:
+    # Malformed regex missing a closing bracket
+    engine = EvaluationEngine(leak_patterns=[r"AKIA[0-9A-Z", r"VALID_PATTERN"])
+    case = FuzzCase(
+        tool_name="test_tool",
+        arguments={},
+        result=ToolCallResult(
+            success=True,
+            content={"key": "VALID_PATTERN_FOUND"},
+            error=None,
+            raw_exception_text=None,
+        ),
+    )
+    verdict = engine.evaluate(case, default_observer_clean)
+    assert verdict.passed is False
+    assert "response contains a configured leak pattern" in verdict.reasons
+
+
+
 @pytest.mark.parametrize(
     "crashed,timed_out,err_text,content,expected_passed,expected_severity,expected_reason",
     [

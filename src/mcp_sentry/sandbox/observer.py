@@ -57,19 +57,25 @@ class Observer:
 
     @staticmethod
     def _parse_stats(stats: dict) -> tuple[float, float]:
-        cpu_delta = (
-            stats["cpu_stats"]["cpu_usage"]["total_usage"]
-            - stats["precpu_stats"]["cpu_usage"]["total_usage"]
-        )
-        system_delta = (
-            stats["cpu_stats"]["system_cpu_usage"]
-            - stats["precpu_stats"]["system_cpu_usage"]
-        )
-        num_cpus = stats["cpu_stats"].get("online_cpus", 1)
+        cpu_stats = stats.get("cpu_stats", {})
+        precpu_stats = stats.get("precpu_stats", {})
+
+        total_cpu = cpu_stats.get("cpu_usage", {}).get("total_usage", 0)
+        pre_total_cpu = precpu_stats.get("cpu_usage", {}).get("total_usage", 0)
+        cpu_delta = total_cpu - pre_total_cpu
+
+        system_cpu = cpu_stats.get("system_cpu_usage", 0)
+        pre_system_cpu = precpu_stats.get("system_cpu_usage", 0)
+        system_delta = system_cpu - pre_system_cpu
+
+        num_cpus = cpu_stats.get("online_cpus", 1)
 
         cpu_percent = 0.0
         if system_delta > 0 and cpu_delta > 0:
             cpu_percent = (cpu_delta / system_delta) * num_cpus * 100.0
 
-        memory_mb = stats["memory_stats"]["usage"] / (1024 * 1024)
+        memory_stats = stats.get("memory_stats", {})
+        memory_usage = memory_stats.get("usage", 0)
+        memory_mb = memory_usage / (1024 * 1024)
+
         return cpu_percent, memory_mb

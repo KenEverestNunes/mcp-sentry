@@ -105,7 +105,7 @@ class MCPClient:
                     error=str(exc),
                     raw_exception_text=str(exc),
                 )
-            print(result.model_dump())
+            # result obtained successfully from call_tool
         except TimeoutError as exc:
             await self.close()
             raise MCPConnectionError("Timed out while initializing the MCP server.") from exc
@@ -116,11 +116,21 @@ class MCPClient:
             ) from exc
 
         if result.isError:
+            error_msg = ""
+            if result.content:
+                text_parts = [
+                    item.text if hasattr(item, "text") else str(item)
+                    for item in result.content
+                ]
+                error_msg = "\n".join(text_parts)
+            else:
+                error_msg = "Tool execution failed with empty error content."
+
             return ToolCallResult(
                 success=False,
                 content=result.content,
-                error=result.content[0].text,
-                raw_exception_text=result.content[0].text,
+                error=error_msg,
+                raw_exception_text=error_msg,
             )
         else:
             return ToolCallResult(

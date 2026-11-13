@@ -67,12 +67,12 @@ class MCPClient:
 
         try:
             if not self._initialized:
-                await asyncio.wait_for(self.session.initialize(), timeout=5)
+                await asyncio.wait_for(self.session.initialize(), timeout=10)
                 self._initialized = True
-            result = await self.session.list_tools()
+            result = await asyncio.wait_for(self.session.list_tools(), timeout=10)
         except TimeoutError as exc:
             await self.close()
-            raise MCPConnectionError("Timed out while initializing the MCP server.") from exc
+            raise MCPConnectionError("Timed out while initializing or discovering tools.") from exc
         except (FileNotFoundError, BrokenPipeError, OSError) as exc:
             await self.close()
             raise MCPConnectionError(

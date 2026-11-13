@@ -77,3 +77,30 @@ async def test_call_tool_handles_non_text_content() -> None:
     assert result.success is False
     assert result.error == "custom-binary-representation"
 
+
+@pytest.mark.anyio
+async def test_discovery_times_out_on_frozen_server(monkeypatch: pytest.MonkeyPatch) -> None:
+    client = MCPClient()
+    client._initialized = True
+
+    class HangingSession:
+        async def list_tools(self):
+            import asyncio
+            await asyncio.sleep(10)
+
+    client.session = HangingSession()
+
+    # Test with a short timeout to run fast
+    import mcp_sentry.client.mcp_client as mcp_mod
+    original_wait_for = mcp_mod.asyncio.wait_for
+
+    async def fast_wait_for(coro, timeout):
+        return await original_wait_for(coro, timeout=0.1)
+
+    monkeypatch.setattr(mcp_mod.asyncio, "wait_for", fast_wait_for)
+
+    with pytest.raises(MCPConnectionError, match="Timed out while initializing or discovering tools"):
+        await client.discover_tools()
+
+
+

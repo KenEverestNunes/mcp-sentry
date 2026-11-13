@@ -1,7 +1,11 @@
 import asyncio
-from docker.errors import NotFound
+import re
+from docker.errors import APIError, NotFound
 from mcp_sentry.models.schemas import ObserverReport
 from mcp_sentry.sandbox.docker_runner import ContainerHandle
+
+ANSI_ESCAPE_PATTERN = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+MAX_STDERR_BYTES = 4096
 
 
 class Observer:
@@ -28,21 +32,25 @@ class Observer:
 
                 await asyncio.sleep(poll_interval)
                 elapsed += poll_interval
-        except NotFound:
-            # container exited and was auto-removed before we could poll it
+        except (NotFound, APIError):
+            # container exited or stopped
             try:
-                result = await asyncio.to_thread(handle.container.wait)
+                result = await asyncio.to_thread(handle.container.wait, timeout=1)
                 exit_code = result.get("StatusCode")
                 timed_out = False
-            except NotFound:
-                pass  # gone before we could even get the exit code
+            except (NotFound, APIError, Exception):
+                pass
 
         stderr_tail = ""
         try:
-            logs = await asyncio.to_thread(handle.container.logs, stderr=True, tail=10)
-            stderr_tail = logs.decode("utf-8") if logs else ""
-        except NotFound:
-            pass  # container and its logs are gone, nothing to capture
+            logs = await asyncio.to_thread(handle.container.logs, stderr=True, tail=20)
+            if logs:
+                # Bound size to avoid memory exhaustion
+                raw_text = logs[:MAX_STDERR_BYTES].decode("utf-8", errors="replace")
+                # Sanitize ANSI control sequences to prevent terminal / log injection
+                stderr_tail = ANSI_ESCAPE_PATTERN.sub("", raw_text)
+        except (NotFound, APIError):
+            pass
 
         crashed = exit_code is not None and exit_code != 0
 

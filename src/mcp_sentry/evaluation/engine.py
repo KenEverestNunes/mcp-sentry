@@ -1,13 +1,44 @@
+import json
+import logging
 import re
-from typing import Pattern, Sequence
+from typing import Any, Pattern, Sequence
 from mcp_sentry.evaluation.verdict import Verdict
 from mcp_sentry.models.schemas import FuzzCase, ObserverReport, ToolCallResult
+
+logger = logging.getLogger(__name__)
 
 TRACEBACK_PATTERN = re.compile(r"Traceback \(most recent call last\):", re.IGNORECASE)
 MCP_INVALID_PARAMS_PATTERN = re.compile(
     r"(?:code\s*[:=]\s*-32602|\b-32602\b|invalid\s+params\b)",
     re.IGNORECASE,
 )
+
+
+def _compile_patterns(patterns: Sequence[str | Pattern[str]]) -> list[Pattern[str]]:
+    """Safely compile pattern sequences, skipping malformed regexes with a warning."""
+    compiled: list[Pattern[str]] = []
+    for p in patterns:
+        if isinstance(p, Pattern):
+            compiled.append(p)
+        else:
+            try:
+                compiled.append(re.compile(p))
+            except re.error as exc:
+                logger.warning("Skipping invalid leak detection regex %r: %s", p, exc)
+    return compiled
+
+
+def _serialize_content(content: Any) -> str:
+    """Serialize response content to canonical JSON format for reliable regex scanning."""
+    if content is None:
+        return ""
+    if isinstance(content, str):
+        return content
+    try:
+        return json.dumps(content, default=str)
+    except Exception:
+        return str(content)
+
 
 
 def is_clean_protocol_rejection(result: ToolCallResult) -> bool:
@@ -37,14 +68,9 @@ class EvaluationEngine:
     """
 
     def __init__(self, leak_patterns: Sequence[str | Pattern[str]] | None = None) -> None:
-        patterns: list[Pattern[str]] = []
-        if leak_patterns:
-            for p in leak_patterns:
-                if isinstance(p, Pattern):
-                    patterns.append(p)
-                else:
-                    patterns.append(re.compile(p))
-        self.compiled_leak_patterns: list[Pattern[str]] = patterns
+        self.compiled_leak_patterns: list[Pattern[str]] = (
+            _compile_patterns(leak_patterns) if leak_patterns else []
+        )
 
     def evaluate(
         self,
@@ -100,14 +126,13 @@ class EvaluationEngine:
             )
 
         # 5. Leak pattern detection
-        # Use passed leak_patterns if provided, else use self.compiled_leak_patterns
-        patterns_to_check = self.compiled_leak_patterns
-        if leak_patterns is not None:
-            patterns_to_check = [
-                p if isinstance(p, Pattern) else re.compile(p) for p in leak_patterns
-            ]
+        patterns_to_check = (
+            _compile_patterns(leak_patterns)
+            if leak_patterns is not None
+            else self.compiled_leak_patterns
+        )
 
-        content_str = str(case.result.content) if case.result.content is not None else ""
+        content_str = _serialize_content(case.result.content)
         for pattern in patterns_to_check:
             if pattern.search(content_str):
                 return Verdict(

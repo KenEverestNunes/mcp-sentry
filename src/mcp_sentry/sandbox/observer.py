@@ -1,5 +1,5 @@
 import asyncio
-from docker.errors import APIError, NotFound
+from docker.errors import NotFound
 from mcp_sentry.models.schemas import ObserverReport
 from mcp_sentry.sandbox.docker_runner import ContainerHandle
 
@@ -15,13 +15,10 @@ class Observer:
 
         try:
             while elapsed < timeout_s:
-                try:
-                    stats = await asyncio.to_thread(handle.container.stats, stream=False)
-                    cpu_percent, memory_mb = self._parse_stats(stats)
-                    peak_memory_mb = max(peak_memory_mb, memory_mb)
-                    peak_cpu_percent = max(peak_cpu_percent, cpu_percent)
-                except (ValueError, KeyError):
-                    pass  # malformed/incomplete stats response, e.g. container still starting up; skip this sample
+                stats = await asyncio.to_thread(handle.container.stats, stream=False)
+                cpu_percent, memory_mb = self._parse_stats(stats)
+                peak_memory_mb = max(peak_memory_mb, memory_mb)
+                peak_cpu_percent = max(peak_cpu_percent, cpu_percent)
 
                 await asyncio.to_thread(handle.container.reload)
                 if handle.container.status != "running":
@@ -44,8 +41,8 @@ class Observer:
         try:
             logs = await asyncio.to_thread(handle.container.logs, stderr=True, tail=10)
             stderr_tail = logs.decode("utf-8") if logs else ""
-        except APIError:
-            pass  # container already gone or being removed (auto_remove race); no logs to capture
+        except NotFound:
+            pass  # container and its logs are gone, nothing to capture
 
         crashed = exit_code is not None and exit_code != 0
 
@@ -60,19 +57,25 @@ class Observer:
 
     @staticmethod
     def _parse_stats(stats: dict) -> tuple[float, float]:
-        cpu_delta = (
-            stats["cpu_stats"]["cpu_usage"]["total_usage"]
-            - stats["precpu_stats"]["cpu_usage"]["total_usage"]
-        )
-        system_delta = (
-            stats["cpu_stats"]["system_cpu_usage"]
-            - stats["precpu_stats"]["system_cpu_usage"]
-        )
-        num_cpus = stats["cpu_stats"].get("online_cpus", 1)
+        cpu_stats = stats.get("cpu_stats", {})
+        precpu_stats = stats.get("precpu_stats", {})
+
+        total_cpu = cpu_stats.get("cpu_usage", {}).get("total_usage", 0)
+        pre_total_cpu = precpu_stats.get("cpu_usage", {}).get("total_usage", 0)
+        cpu_delta = total_cpu - pre_total_cpu
+
+        system_cpu = cpu_stats.get("system_cpu_usage", 0)
+        pre_system_cpu = precpu_stats.get("system_cpu_usage", 0)
+        system_delta = system_cpu - pre_system_cpu
+
+        num_cpus = cpu_stats.get("online_cpus", 1)
 
         cpu_percent = 0.0
         if system_delta > 0 and cpu_delta > 0:
             cpu_percent = (cpu_delta / system_delta) * num_cpus * 100.0
 
-        memory_mb = stats["memory_stats"]["usage"] / (1024 * 1024)
+        memory_stats = stats.get("memory_stats", {})
+        memory_usage = memory_stats.get("usage", 0)
+        memory_mb = memory_usage / (1024 * 1024)
+
         return cpu_percent, memory_mb

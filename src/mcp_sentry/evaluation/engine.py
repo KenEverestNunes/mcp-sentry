@@ -4,28 +4,30 @@ from mcp_sentry.evaluation.verdict import Verdict
 from mcp_sentry.models.schemas import FuzzCase, ObserverReport, ToolCallResult
 
 TRACEBACK_PATTERN = re.compile(r"Traceback \(most recent call last\):", re.IGNORECASE)
-MCP_INVALID_PARAMS_CODE = -32602
+MCP_INVALID_PARAMS_PATTERN = re.compile(
+    r"(?:code\s*[:=]\s*-32602|\b-32602\b|invalid\s+params\b)",
+    re.IGNORECASE,
+)
 
 
 def is_clean_protocol_rejection(result: ToolCallResult) -> bool:
     """
     Checks if a tool failure is a standard MCP protocol error for invalid parameters (-32602).
-    A clean schema validation rejection from FastMCP/MCP is considered correct behavior, not a bug.
+    A clean schema validation rejection from FastMCP/MCP is considered correct behavior, not a bug,
+    provided no unhandled exception traceback is present.
     """
     if result.success:
         return False
 
     error_text = result.error or ""
     raw_text = result.raw_exception_text or ""
+    error_blob = f"{error_text} {raw_text}"
 
-    # Check for -32602 or "invalid params"
-    if str(MCP_INVALID_PARAMS_CODE) in error_text or str(MCP_INVALID_PARAMS_CODE) in raw_text:
-        return True
+    # If an unhandled traceback is leaked, it is NOT a clean protocol rejection
+    if TRACEBACK_PATTERN.search(error_blob):
+        return False
 
-    if "invalid params" in error_text.lower() or "invalid params" in raw_text.lower():
-        return True
-
-    return False
+    return bool(MCP_INVALID_PARAMS_PATTERN.search(error_blob))
 
 
 class EvaluationEngine:
@@ -55,8 +57,8 @@ class EvaluationEngine:
         Priority order:
         1. observer_report.crashed -> critical ("target crashed on input")
         2. observer_report.timed_out -> critical ("target froze / exceeded timeout")
-        3. Clean protocol rejection -> passed=True, info ("target correctly rejected invalid input")
-        4. Raw traceback leaked -> warning ("unhandled exception leaked to caller")
+        3. Raw traceback leaked -> warning ("unhandled exception leaked to caller")
+        4. Clean protocol rejection -> passed=True, info ("target correctly rejected invalid input")
         5. Configured leak pattern in content -> critical ("response contains a configured leak pattern")
         6. Otherwise -> passed=True, info ("tool call executed safely")
         """
@@ -78,16 +80,7 @@ class EvaluationEngine:
                 severity="critical",
             )
 
-        # 3. Clean protocol rejection (e.g., -32602 Invalid params)
-        if is_clean_protocol_rejection(case.result):
-            return Verdict(
-                fuzz_case=case,
-                passed=True,
-                reasons=["target correctly rejected invalid input"],
-                severity="info",
-            )
-
-        # 4. Raw traceback text in result.error or raw_exception_text
+        # 3. Raw traceback text in result.error or raw_exception_text
         error_blob = f"{case.result.error or ''} {case.result.raw_exception_text or ''}"
         if TRACEBACK_PATTERN.search(error_blob):
             return Verdict(
@@ -95,6 +88,15 @@ class EvaluationEngine:
                 passed=False,
                 reasons=["unhandled exception leaked to caller"],
                 severity="warning",
+            )
+
+        # 4. Clean protocol rejection (e.g., -32602 Invalid params without traceback)
+        if is_clean_protocol_rejection(case.result):
+            return Verdict(
+                fuzz_case=case,
+                passed=True,
+                reasons=["target correctly rejected invalid input"],
+                severity="info",
             )
 
         # 5. Leak pattern detection

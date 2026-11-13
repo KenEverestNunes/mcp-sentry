@@ -127,6 +127,33 @@ def test_unhandled_traceback_leaked(default_observer_clean: ObserverReport) -> N
     assert "unhandled exception leaked to caller" in verdict.reasons
 
 
+def test_unhandled_traceback_with_32602_is_flagged_as_warning(
+    default_observer_clean: ObserverReport,
+) -> None:
+    engine = EvaluationEngine()
+    traceback_with_code = (
+        "Traceback (most recent call last):\n"
+        "  File 'server.py', line 10, in validate\n"
+        "ValueError: error code -32602 during custom validation"
+    )
+    case = FuzzCase(
+        tool_name="get_order",
+        arguments={"order_id": "bad"},
+        result=ToolCallResult(
+            success=False,
+            content=None,
+            error=traceback_with_code,
+            raw_exception_text=traceback_with_code,
+        ),
+    )
+    # Even though -32602 is mentioned, the presence of a traceback means it is NOT a clean protocol rejection
+    assert is_clean_protocol_rejection(case.result) is False
+    verdict = engine.evaluate(case, default_observer_clean)
+    assert verdict.passed is False
+    assert verdict.severity == "warning"
+    assert "unhandled exception leaked to caller" in verdict.reasons
+
+
 def test_leak_pattern_detection(default_observer_clean: ObserverReport) -> None:
     engine = EvaluationEngine(
         leak_patterns=[

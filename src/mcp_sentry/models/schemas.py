@@ -25,3 +25,10 @@ class ObserverReport (BaseModel):
     peak_cpu_percent: float
     stderr_tail: str
 
+
+class SessionReport(BaseModel):
+    target_name: str
+    verdicts: list[Any]
+    observer_report: ObserverReport
+
+

@@ -1,3 +1,3 @@
-from mcp_sentry.models.schemas import ToolSchema, FuzzCase, ToolCallResult, ObserverReport
+from mcp_sentry.models.schemas import ToolSchema, FuzzCase, ToolCallResult, ObserverReport, SessionReport
 
-__all__ = ["ToolSchema", "FuzzCase", "ToolCallResult", "ObserverReport"]
+__all__ = ["ToolSchema", "FuzzCase", "ToolCallResult", "ObserverReport", "SessionReport"]

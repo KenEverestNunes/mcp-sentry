@@ -1,4 +1,4 @@
-from typing import Any
+from typing import Any, Literal
 from pydantic import BaseModel
 
 class ToolSchema(BaseModel):
@@ -15,9 +15,9 @@ class ToolCallResult(BaseModel):
 class FuzzCase(BaseModel):
     tool_name: str
     arguments: dict[str, Any]
-    result:ToolCallResult
+    result: ToolCallResult
 
-class ObserverReport (BaseModel):
+class ObserverReport(BaseModel):
     crashed: bool
     exit_code: int | None
     timed_out: bool
@@ -30,5 +30,16 @@ class SessionReport(BaseModel):
     target_name: str
     verdicts: list[Any]
     observer_report: ObserverReport
+
+
+class RunRecord(BaseModel):
+    run_id: str
+    status: Literal["pending", "running", "completed", "failed"]
+    report: SessionReport | None = None
+    error: str | None = None
+
+
+class RunRequest(BaseModel):
+    target: str
 
 

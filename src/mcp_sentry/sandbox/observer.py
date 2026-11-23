@@ -9,7 +9,12 @@ MAX_STDERR_BYTES = 4096
 
 
 class Observer:
-    async def watch(self, handle: ContainerHandle, timeout_s: float = 15.0) -> ObserverReport:
+    async def watch(
+        self,
+        handle: ContainerHandle,
+        timeout_s: float = 15.0,
+        stop_event: asyncio.Event | None = None,
+    ) -> ObserverReport:
         peak_memory_mb = 0.0
         peak_cpu_percent = 0.0
         exit_code = None
@@ -27,6 +32,10 @@ class Observer:
                 await asyncio.to_thread(handle.container.reload)
                 if handle.container.status != "running":
                     exit_code = handle.container.attrs["State"]["ExitCode"]
+                    timed_out = False
+                    break
+
+                if stop_event is not None and stop_event.is_set():
                     timed_out = False
                     break
 

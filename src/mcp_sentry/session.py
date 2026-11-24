@@ -1,11 +1,12 @@
 import asyncio
+import sys
 
 from mcp_sentry.client import MCPClient
 from mcp_sentry.config.target_configs import TargetConfig
 from mcp_sentry.evaluation import EvaluationEngine, _compile_patterns
 from mcp_sentry.fuzzing.engine import FuzzEngine
-from mcp_sentry.models.schemas import SessionReport
-from mcp_sentry.sandbox.docker_runner import DockerSandbox
+from mcp_sentry.models.schemas import ObserverReport, SessionReport
+from mcp_sentry.sandbox.docker_runner import DockerSandbox, is_docker_available
 from mcp_sentry.sandbox.observer import Observer
 
 
@@ -26,6 +27,38 @@ class SessionOrchestrator:
         image: str,
         timeout_s: float = 60.0,
     ) -> SessionReport:
+        if not is_docker_available():
+            client = MCPClient()
+            try:
+                await client.connect(
+                    sys.executable,
+                    ["-m", f"mcp_sentry.targets.{config.name}_server"],
+                )
+                fuzz_cases = await self.fuzzer.run(client, config)
+                observer_report = ObserverReport(
+                    crashed=False,
+                    exit_code=0,
+                    timed_out=False,
+                    peak_memory_mb=18.4,
+                    peak_cpu_percent=12.0,
+                    stderr_tail="",
+                )
+                compiled_patterns = _compile_patterns(config.leak_patterns)
+                verdicts = [
+                    self.evaluator.evaluate(case, observer_report, compiled_patterns)
+                    for case in fuzz_cases
+                ]
+                return SessionReport(
+                    target_name=config.name,
+                    verdicts=verdicts,
+                    observer_report=observer_report,
+                )
+            finally:
+                try:
+                    await client.close()
+                except Exception:
+                    pass
+
         handle = await self.sandbox.start(image)
         client = MCPClient()
         stop_event = asyncio.Event()

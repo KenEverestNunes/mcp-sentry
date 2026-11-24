@@ -95,3 +95,12 @@ class DockerSandbox:
             pass
         finally:
             _ACTIVE_CONTAINERS.discard(handle.container)
+
+
+def is_docker_available() -> bool:
+    """Check if the Docker daemon is reachable locally."""
+    try:
+        docker.from_env().ping()
+        return True
+    except Exception:
+        return False

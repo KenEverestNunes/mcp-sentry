@@ -3,11 +3,11 @@
 [![Python 3.12+](https://img.shields.io/badge/python-3.12+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Tests: 57 Passed](https://img.shields.io/badge/tests-57%20passed-brightgreen.svg)](tests/)
-[![Live Demo](https://img.shields.io/badge/Live%20Demo-GCP%20Cloud-success?style=flat&logo=googlecloud)](http://104.197.48.48)
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-Google%20Cloud%20Run-success?style=flat&logo=googlecloud)](https://mcp-sentry-122120455814.us-central1.run.app)
 
 An automated dynamic fuzzer, sandbox observer, and web dashboard for Model Context Protocol (MCP) servers.
 
-> 🌐 **Live Cloud Demo:** [http://104.197.48.48](http://104.197.48.48) (Hosted on Google Cloud Platform)
+> 🌐 **Live Cloud Demo:** [https://mcp-sentry-122120455814.us-central1.run.app](https://mcp-sentry-122120455814.us-central1.run.app) (Serverless HTTPS on Google Cloud Run — Permanent Free Tier, Scale-to-Zero $0 Cost)
 
 ## Why This Exists
 

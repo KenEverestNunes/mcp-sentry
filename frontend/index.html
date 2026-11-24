@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MCP-Sentry Dashboard</title>
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --bg-surface: #ffffff;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --success-bg: #ecfdf5;
+      --success-text: #065f46;
+      --warning-bg: #fffbeb;
+      --warning-text: #92400e;
+      --danger-bg: #fef2f2;
+      --danger-text: #991b1b;
+      --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      line-height: 1.5;
+      padding: 2.5rem 1rem;
+    }
+
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    header {
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .title-group h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .title-group p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      margin-top: 0.25rem;
+    }
+
+    .badge-status {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      color: var(--text-main);
+    }
+
+    .form-group {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: var(--text-main);
+    }
+
+    select {
+      padding: 0.6rem 1rem;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background-color: white;
+      min-width: 220px;
+      outline: none;
+    }
+
+    button {
+      padding: 0.6rem 1.4rem;
+      background-color: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.15s ease;
+    }
+
+    button:hover:not(:disabled) {
+      background-color: var(--accent-hover);
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    .status-idle { background: #f1f5f9; color: #475569; }
+    .status-running { background: #dbeafe; color: #1e40af; }
+    .status-completed { background: #dcfce7; color: #166534; }
+    .status-failed { background: #fee2e2; color: #991b1b; }
+
+    .spinner {
+      width: 13px;
+      height: 13px;
+      border: 2px solid #93c5fd;
+      border-top-color: #1e40af;
+      border-radius: 50%;
+      animation: spin 0.75s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .stat-chip {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 0.85rem 1rem;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+    }
+
+    .stat-val {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-main);
+      margin-top: 0.25rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+      vertical-align: top;
+    }
+
+    th {
+      background-color: #f8fafc;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .badge-crit { background: var(--danger-bg); color: var(--danger-text); padding: 0.25rem 0.55rem; border-radius: 4px; font-weight: 700; font-size: 0.75rem; }
+    .badge-warn { background: var(--warning-bg); color: var(--warning-text); padding: 0.25rem 0.55rem; border-radius: 4px; font-weight: 700; font-size: 0.75rem; }
+    .badge-info { background: #eff6ff; color: #1e40af; padding: 0.25rem 0.55rem; border-radius: 4px; font-weight: 700; font-size: 0.75rem; }
+
+    .code-box {
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      padding: 0.4rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.8rem;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    /* Smart Clamped Payload Cell */
+    .clamped-container {
+      position: relative;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      overflow: hidden;
+    }
+
+    .clamped-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      padding: 0.45rem 0.6rem;
+      font-size: 0.78rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: #1e293b;
+      max-height: 64px;
+      overflow: hidden;
+    }
+
+    .clamped-fade {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 28px;
+      background: linear-gradient(to bottom, rgba(241, 245, 249, 0), #f1f5f9 90%);
+      pointer-events: none;
+    }
+
+    .expand-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      margin-top: 6px;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: #eff6ff;
+      border: 1px solid #bfdbfe;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      line-height: 1.2;
+    }
+
+    .expand-btn:hover {
+      background: #dbeafe;
+      color: var(--accent-hover);
+      border-color: #93c5fd;
+    }
+
+    /* Payload Inspector Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.55);
+      backdrop-filter: blur(2px);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-card {
+      background: #ffffff;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      max-width: 820px;
+      width: 100%;
+      max-height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      animation: modalFadeIn 0.15s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.97); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.85rem 1.25rem;
+      border-bottom: 1px solid var(--border-color);
+      background: #f8fafc;
+    }
+
+    .modal-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal-title code {
+      color: var(--accent);
+      background: #eff6ff;
+      border: 1px solid #dbeafe;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-secondary {
+      padding: 0.35rem 0.75rem;
+      background: #ffffff;
+      color: #334155;
+      border: 1px solid var(--border-color);
+      border-radius: 5px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-secondary:hover {
+      background: #f1f5f9;
+      color: var(--text-main);
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.4rem;
+      line-height: 1;
+      padding: 0.2rem 0.4rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+
+    .modal-close-btn:hover {
+      background: #e2e8f0;
+      color: var(--text-main);
+    }
+
+    .modal-body {
+      padding: 1.25rem;
+      overflow-y: auto;
+      background: #f8fafc;
+      flex: 1;
+    }
+
+    .modal-code {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 1rem;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.825rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      word-break: break-all;
+      color: #0f172a;
+      user-select: text;
+    }
+
+    .reasons-list {
+      list-style-type: disc;
+      padding-left: 1.25rem;
+      color: #334155;
+      font-size: 0.85rem;
+      word-break: break-word;
+    }
+
+    pre.terminal {
+      background: #0f172a;
+      color: #f8fafc;
+      padding: 1rem;
+      border-radius: 6px;
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+      overflow-x: auto;
+      max-height: 260px;
+      white-space: pre-wrap;
+    }
+
+    .alert {
+      padding: 0.85rem 1.15rem;
+      border-radius: 6px;
+      margin-top: 1rem;
+      font-size: 0.9rem;
+    }
+    .alert-error { background: #fee2e2; border: 1px solid #fca5a5; color: #991b1b; }
+    .alert-info { background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="title-group">
+        <h1>MCP-Sentry</h1>
+        <p>Autonomous Security & Robustness Fuzzing for Model Context Protocol Servers</p>
+      </div>
+      <div>
+        <span id="globalStatusBadge" class="badge-status status-idle">System Ready</span>
+      </div>
+    </header>
+
+    <!-- Run Controls Card -->
+    <div class="card">
+      <h2 class="card-title">Target Server</h2>
+      <div class="form-group">
+        <label for="targetSelect">Select Target:</label>
+        <select id="targetSelect">
+          <option value="" disabled selected>Loading targets...</option>
+        </select>
+        <button id="runBtn" onclick="startRun()">Run Fuzzing Session</button>
+      </div>
+      <div id="statusAlert" style="display:none;" class="alert"></div>
+    </div>
+
+    <!-- Active / Last Run Summary Card -->
+    <div id="resultsCard" class="card" style="display:none;">
+      <h2 class="card-title" id="resultsTitle">Session Verdicts & Observability</h2>
+      
+      <!-- Metrics Chips -->
+      <div id="statsSection" class="stats-grid" style="display:none;">
+        <div class="stat-chip">
+          <div class="stat-label">Target</div>
+          <div class="stat-val" id="statTarget">—</div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-label">Container State</div>
+          <div class="stat-val" id="statContainer">—</div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-label">Peak Memory</div>
+          <div class="stat-val" id="statMemory">—</div>
+        </div>
+        <div class="stat-chip">
+          <div class="stat-label">Peak CPU</div>
+          <div class="stat-val" id="statCpu">—</div>
+        </div>
+      </div>
+
+      <!-- Verdicts Table -->
+      <div id="verdictsSection" style="display:none;">
+        <table id="verdictsTable">
+          <thead>
+            <tr>
+              <th style="width: 15%;">Tool</th>
+              <th style="width: 35%;">Input Arguments</th>
+              <th style="width: 15%;">Result</th>
+              <th style="width: 15%;">Severity</th>
+              <th style="width: 20%;">Findings / Reasons</th>
+            </tr>
+          </thead>
+          <tbody id="verdictsBody"></tbody>
+        </table>
+      </div>
+
+      <!-- Stderr Log Section -->
+      <div id="stderrSection" style="display:none; margin-top: 1.5rem;">
+        <h3 style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; color: #475569;">Container Stderr Log Tail</h3>
+        <pre class="terminal" id="stderrTail"></pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Payload Inspector Modal -->
+  <div id="payloadModal" class="modal-overlay" onclick="handleModalBackdropClick(event)">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>Payload Inspector:</span>
+          <code id="modalToolName"></code>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="copyPayloadBtn" onclick="copyModalPayload()">📋 Copy Payload</button>
+          <button class="modal-close-btn" onclick="closePayloadModal()" title="Close (Esc)">&times;</button>
+        </div>
+      </div>
+      <div class="modal-body">
+        <div class="modal-code" id="modalPayloadContent"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let pollInterval = null;
+    let currentRunId = null;
+
+    async function loadTargets() {
+      const select = document.getElementById('targetSelect');
+      const runBtn = document.getElementById('runBtn');
+      try {
+        const res = await fetch('/targets');
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const targets = await res.json();
+        select.innerHTML = '';
+        targets.forEach(t => {
+          const opt = document.createElement('option');
+          opt.value = t;
+          opt.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+          select.appendChild(opt);
+        });
+        runBtn.disabled = targets.length === 0;
+      } catch (err) {
+        select.innerHTML = '<option disabled>Failed to load targets</option>';
+        showAlert('Could not load targets from backend: ' + err.message, 'error');
+        runBtn.disabled = true;
+      }
+    }
+
+    function showAlert(msg, type = 'info') {
+      const alertBox = document.getElementById('statusAlert');
+      alertBox.textContent = msg;
+      alertBox.className = 'alert ' + (type === 'error' ? 'alert-error' : 'alert-info');
+      alertBox.style.display = 'block';
+    }
+
+    function clearAlert() {
+      const alertBox = document.getElementById('statusAlert');
+      alertBox.style.display = 'none';
+      alertBox.textContent = '';
+    }
+
+    function setStatus(text, stateClass, showSpinner = false) {
+      const badge = document.getElementById('globalStatusBadge');
+      badge.className = 'badge-status ' + stateClass;
+      badge.innerHTML = showSpinner ? `<div class="spinner"></div> ${text}` : text;
+    }
+
+    async function startRun() {
+      clearAlert();
+      const select = document.getElementById('targetSelect');
+      const runBtn = document.getElementById('runBtn');
+      const target = select.value;
+      if (!target) return;
+
+      runBtn.disabled = true;
+      select.disabled = true;
+      setStatus(`Starting session for ${target}...`, 'status-running', true);
+
+      // Reset results display
+      document.getElementById('resultsCard').style.display = 'block';
+      document.getElementById('statsSection').style.display = 'none';
+      document.getElementById('verdictsSection').style.display = 'none';
+      document.getElementById('stderrSection').style.display = 'none';
+      document.getElementById('resultsTitle').textContent = `Running Fuzzing Session on '${target}'...`;
+
+      try {
+        const res = await fetch('/runs', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ target: target })
+        });
+
+        if (res.status === 409) {
+          throw new Error('Another fuzzing session is currently in progress. Please wait.');
+        }
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.detail || `Server returned HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        currentRunId = data.run_id;
+        setStatus(`Fuzzing ${target} in container...`, 'status-running', true);
+        
+        pollInterval = setInterval(pollRunStatus, 1500);
+      } catch (err) {
+        clearInterval(pollInterval);
+        runBtn.disabled = false;
+        select.disabled = false;
+        setStatus('Ready', 'status-idle');
+        showAlert(err.message, 'error');
+        document.getElementById('resultsCard').style.display = 'none';
+      }
+    }
+
+    async function pollRunStatus() {
+      if (!currentRunId) return;
+      try {
+        const res = await fetch(`/runs/${currentRunId}`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+
+        if (data.status === 'running' || data.status === 'pending') {
+          return; // Still running, wait for next tick
+        }
+
+        // Completed or Failed: stop polling
+        clearInterval(pollInterval);
+        document.getElementById('runBtn').disabled = false;
+        document.getElementById('targetSelect').disabled = false;
+
+        if (data.status === 'completed' && data.report) {
+          setStatus('Completed', 'status-completed');
+          renderResults(data.report);
+          try {
+            history.replaceState(null, '', `?run_id=${currentRunId}`);
+          } catch (e) {}
+        } else if (data.status === 'failed') {
+          setStatus('Failed', 'status-failed');
+          showAlert(`Run failed: ${data.error || 'Unknown error occurred'}`, 'error');
+          document.getElementById('resultsTitle').textContent = 'Run Execution Failed';
+        }
+      } catch (err) {
+        clearInterval(pollInterval);
+        document.getElementById('runBtn').disabled = false;
+        document.getElementById('targetSelect').disabled = false;
+        setStatus('Error', 'status-failed');
+        showAlert(`Polling error: ${err.message}`, 'error');
+      }
+    }
+
+    function formatDisplayArguments(args) {
+      if (!args || typeof args !== 'object') {
+        const str = JSON.stringify(args || {}, null, 2);
+        return { previewText: str, fullText: str, isLong: false, charCount: str.length };
+      }
+
+      const fullText = JSON.stringify(args, null, 2);
+      const charCount = fullText.length;
+      let hasLongValue = charCount > 120 || fullText.split('\n').length > 5;
+
+      const previewObj = Array.isArray(args) ? [] : {};
+      for (const [key, val] of Object.entries(args)) {
+        if (typeof val === 'string' && val.length > 35) {
+          hasLongValue = true;
+          previewObj[key] = `${val.slice(0, 16)}... [${val.length.toLocaleString()} chars]`;
+        } else {
+          previewObj[key] = val;
+        }
+      }
+
+      const previewText = JSON.stringify(previewObj, null, 2);
+      return {
+        previewText,
+        fullText,
+        isLong: hasLongValue,
+        charCount
+      };
+    }
+
+    function renderResults(report) {
+      document.getElementById('resultsTitle').textContent = `Fuzzing Report: ${report.target_name}`;
+      
+      // Observability stats
+      const obs = report.observer_report || {};
+      document.getElementById('statTarget').textContent = report.target_name;
+      
+      let containerText = 'Clean Exit';
+      if (obs.crashed) {
+        containerText = `Crashed (exit ${obs.exit_code ?? 1})`;
+      } else if (obs.timed_out) {
+        containerText = 'Timed Out';
+      }
+      document.getElementById('statContainer').textContent = containerText;
+      document.getElementById('statMemory').textContent = obs.peak_memory_mb ? `${obs.peak_memory_mb.toFixed(1)} MB` : 'N/A';
+      document.getElementById('statCpu').textContent = obs.peak_cpu_percent ? `${obs.peak_cpu_percent.toFixed(1)}%` : 'N/A';
+      document.getElementById('statsSection').style.display = 'grid';
+
+      // Verdicts
+      const tbody = document.getElementById('verdictsBody');
+      tbody.innerHTML = '';
+
+      if (report.verdicts && report.verdicts.length > 0) {
+        report.verdicts.forEach(v => {
+          const row = document.createElement('tr');
+          const fc = v.fuzz_case || {};
+          
+          // Tool
+          const tdTool = document.createElement('td');
+          tdTool.style.fontWeight = '600';
+          tdTool.textContent = fc.tool_name || 'unknown';
+          row.appendChild(tdTool);
+
+          // Arguments
+          const tdArgs = document.createElement('td');
+          const argData = formatDisplayArguments(fc.arguments || {});
+
+          if (argData.isLong) {
+            const container = document.createElement('div');
+            container.className = 'clamped-container';
+
+            const code = document.createElement('div');
+            code.className = 'clamped-code';
+            code.textContent = argData.previewText;
+            container.appendChild(code);
+
+            const fade = document.createElement('div');
+            fade.className = 'clamped-fade';
+            container.appendChild(fade);
+
+            tdArgs.appendChild(container);
+
+            const expandBtn = document.createElement('button');
+            expandBtn.className = 'expand-btn';
+            const sizeLabel = argData.charCount >= 1024 ? `${(argData.charCount / 1024).toFixed(1)} KB` : `${argData.charCount} chars`;
+            expandBtn.innerHTML = `🔍 Expand (${sizeLabel})`;
+            expandBtn.onclick = () => openPayloadModal(fc.tool_name || 'unknown', argData.fullText);
+            tdArgs.appendChild(expandBtn);
+          } else {
+            const codeArgs = document.createElement('div');
+            codeArgs.className = 'code-box';
+            codeArgs.textContent = argData.previewText;
+            tdArgs.appendChild(codeArgs);
+          }
+          row.appendChild(tdArgs);
+
+          // Pass / Fail
+          const tdPass = document.createElement('td');
+          tdPass.textContent = v.passed ? 'PASS' : 'FAIL';
+          tdPass.style.fontWeight = '600';
+          tdPass.style.color = v.passed ? '#166534' : '#991b1b';
+          row.appendChild(tdPass);
+
+          // Severity
+          const tdSev = document.createElement('td');
+          const badgeSev = document.createElement('span');
+          const sev = (v.severity || 'info').toLowerCase();
+          badgeSev.className = sev === 'critical' ? 'badge-crit' : (sev === 'warning' ? 'badge-warn' : 'badge-info');
+          badgeSev.textContent = sev.toUpperCase();
+          tdSev.appendChild(badgeSev);
+          row.appendChild(tdSev);
+
+          // Reasons
+          const tdReasons = document.createElement('td');
+          if (v.reasons && v.reasons.length > 0) {
+            const ul = document.createElement('ul');
+            ul.className = 'reasons-list';
+            v.reasons.forEach(r => {
+              const li = document.createElement('li');
+              li.textContent = r;
+              ul.appendChild(li);
+            });
+            tdReasons.appendChild(ul);
+          } else {
+            tdReasons.textContent = 'None';
+            tdReasons.style.color = 'var(--text-muted)';
+          }
+          row.appendChild(tdReasons);
+
+          tbody.appendChild(row);
+        });
+        document.getElementById('verdictsSection').style.display = 'block';
+      } else {
+        document.getElementById('verdictsSection').style.display = 'block';
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#64748b;">No verdicts recorded for this run.</td></tr>';
+      }
+
+      // Stderr log
+      if (obs.stderr_tail && obs.stderr_tail.trim().length > 0) {
+        document.getElementById('stderrTail').textContent = obs.stderr_tail;
+        document.getElementById('stderrSection').style.display = 'block';
+      } else {
+        document.getElementById('stderrSection').style.display = 'none';
+      }
+    }
+
+    let currentModalPayload = '';
+
+    function openPayloadModal(toolName, payloadStr) {
+      currentModalPayload = payloadStr;
+      document.getElementById('modalToolName').textContent = toolName;
+      document.getElementById('modalPayloadContent').textContent = payloadStr;
+      document.getElementById('payloadModal').classList.add('active');
+      const copyBtn = document.getElementById('copyPayloadBtn');
+      copyBtn.textContent = '📋 Copy Payload';
+      copyBtn.style.color = '#334155';
+    }
+
+    function closePayloadModal() {
+      document.getElementById('payloadModal').classList.remove('active');
+      currentModalPayload = '';
+    }
+
+    function handleModalBackdropClick(event) {
+      if (event.target.id === 'payloadModal') {
+        closePayloadModal();
+      }
+    }
+
+    function copyModalPayload() {
+      if (!currentModalPayload) return;
+      const copyBtn = document.getElementById('copyPayloadBtn');
+      
+      let copied = false;
+      try {
+        if (navigator.clipboard && window.isSecureContext) {
+          navigator.clipboard.writeText(currentModalPayload).catch(() => {});
+          copied = true;
+        }
+      } catch (e) {}
+
+      if (!copied) {
+        try {
+          const ta = document.createElement('textarea');
+          ta.value = currentModalPayload;
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.focus();
+          ta.select();
+          document.execCommand('copy');
+          document.body.removeChild(ta);
+        } catch (e) {}
+      }
+
+      copyBtn.textContent = '✅ Copied!';
+      copyBtn.style.color = '#166534';
+      copyBtn.style.borderColor = '#86efac';
+      copyBtn.style.background = '#f0fdf4';
+      setTimeout(() => {
+        copyBtn.textContent = '📋 Copy Payload';
+        copyBtn.style.color = '#334155';
+        copyBtn.style.borderColor = 'var(--border-color)';
+        copyBtn.style.background = '#ffffff';
+      }, 2500);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closePayloadModal();
+      }
+    });
+
+    // Initialize on load
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadTargets();
+      const urlParams = new URLSearchParams(window.location.search);
+      const runId = urlParams.get('run_id');
+      if (runId) {
+        currentRunId = runId;
+        document.getElementById('resultsCard').style.display = 'block';
+        setStatus('Loading run report...', 'status-running', true);
+        pollRunStatus();
+      }
+    });
+  </script>
+</body>
+</html>

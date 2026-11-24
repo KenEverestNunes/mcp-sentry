@@ -1,5 +1,7 @@
 import asyncio
+import os
 import sys
+from pathlib import Path
 
 from mcp_sentry.client import MCPClient
 from mcp_sentry.config.target_configs import TargetConfig
@@ -30,9 +32,19 @@ class SessionOrchestrator:
         if not is_docker_available():
             client = MCPClient()
             try:
+                python_bin = sys.executable
+                src_dir = str(Path(__file__).resolve().parent.parent)
+                current_pythonpath = os.environ.get("PYTHONPATH", "")
+                pythonpath = f"{src_dir}:{current_pythonpath}" if current_pythonpath else src_dir
+                subprocess_env = {
+                    **os.environ,
+                    "PYTHONUNBUFFERED": "1",
+                    "PYTHONPATH": pythonpath,
+                }
                 await client.connect(
-                    sys.executable,
-                    ["-m", f"mcp_sentry.targets.{config.name}_server"],
+                    python_bin,
+                    ["-u", "-m", f"mcp_sentry.targets.{config.name}_server"],
+                    env=subprocess_env,
                 )
                 fuzz_cases = await self.fuzzer.run(client, config)
                 observer_report = ObserverReport(

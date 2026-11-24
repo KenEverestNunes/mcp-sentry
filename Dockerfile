@@ -11,8 +11,7 @@ WORKDIR /app
 COPY pyproject.toml uv.lock /app/
 
 # Install dependencies using frozen lockfile
-RUN --mount=type=cache,target=/root/.cache/uv \
-    uv sync --frozen --no-install-project --no-dev
+RUN uv sync --frozen --no-install-project --no-dev
 
 # Copy application source code and frontend assets
 COPY src/ /app/src/
@@ -23,6 +22,7 @@ COPY README.md /app/README.md
 RUN uv sync --frozen --no-dev
 
 ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONPATH="/app/src:/app"
 ENV PORT=8080
 
 EXPOSE 8080

@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import uuid
 from typing import Any
 
@@ -9,6 +10,7 @@ from mcp_sentry.models.schemas import RunRecord, RunRequest
 from mcp_sentry.session import SessionOrchestrator
 
 router = APIRouter(prefix="/runs", tags=["runs"])
+logger = logging.getLogger(__name__)
 
 RUNS: dict[str, RunRecord] = {}
 _RUN_LOCK = asyncio.Lock()
@@ -27,7 +29,12 @@ async def _execute_run(run_id: str, target: str) -> None:
         record.report = report
     except Exception as exc:
         record.status = "failed"
-        record.error = str(exc)
+        logger.exception("Run %s failed: %s", run_id, exc)
+        if hasattr(exc, "exceptions"):
+            sub_msgs = "; ".join(f"{type(e).__name__}: {e}" for e in exc.exceptions)
+            record.error = f"{type(exc).__name__}: {sub_msgs}"
+        else:
+            record.error = f"{type(exc).__name__}: {exc}"
     finally:
         if _RUN_LOCK.locked():
             _RUN_LOCK.release()

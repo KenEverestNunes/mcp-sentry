@@ -1,5 +1,7 @@
 import asyncio
+import os
 from contextlib import AsyncExitStack
+from pathlib import Path
 from typing import Any
 
 from mcp import ClientSession, StdioServerParameters
@@ -38,7 +40,13 @@ class MCPClient:
             await self.close()
             raise MCPConnectionError("Could not connect to the sandboxed container.") from exc
 
-    async def connect(self, command: str | None = None, args: list[str] | None = None) -> None:
+    async def connect(
+        self,
+        command: str | None = None,
+        args: list[str] | None = None,
+        env: dict[str, str] | None = None,
+        cwd: str | Path | None = None,
+    ) -> None:
         if self.session is not None:
             return
 
@@ -50,7 +58,18 @@ class MCPClient:
         self._command = command
         self._args = args
         self._stack = AsyncExitStack()
-        server_params = StdioServerParameters(command=command, args=args)
+
+        merged_env = dict(os.environ)
+        if env is not None:
+            merged_env.update(env)
+        merged_env["PYTHONUNBUFFERED"] = "1"
+
+        server_params = StdioServerParameters(
+            command=command,
+            args=args,
+            env=merged_env,
+            cwd=cwd,
+        )
         try:
             read_stream, write_stream = await self._stack.enter_async_context(
                 stdio_client(server_params)
@@ -58,7 +77,7 @@ class MCPClient:
             self.session = await self._stack.enter_async_context(
                 ClientSession(read_stream, write_stream)
             )
-        except (FileNotFoundError, BrokenPipeError, OSError) as exc:
+        except Exception as exc:
             await self.close()
             raise MCPConnectionError(
                 f"Could not start MCP server with command {command!r}."
@@ -76,7 +95,7 @@ class MCPClient:
         except TimeoutError as exc:
             await self.close()
             raise MCPConnectionError("Timed out while initializing or discovering tools.") from exc
-        except (FileNotFoundError, BrokenPipeError, OSError) as exc:
+        except Exception as exc:
             await self.close()
             raise MCPConnectionError(
                 "The MCP server exited during initialization or discovery."
@@ -112,11 +131,9 @@ class MCPClient:
         except TimeoutError as exc:
             await self.close()
             raise MCPConnectionError("Timed out while initializing the MCP server.") from exc
-        except (FileNotFoundError, BrokenPipeError, OSError) as exc:
+        except Exception as exc:
             await self.close()
-            raise MCPConnectionError(
-                "The MCP server exited during initialization or discovery."
-            ) from exc
+            raise MCPConnectionError("The MCP server exited during tool execution.") from exc
 
         if result.isError:
             error_msg = ""

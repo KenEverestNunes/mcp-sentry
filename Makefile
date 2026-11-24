@@ -19,3 +19,9 @@ run:
 
 inspect:
 	npx @modelcontextprotocol/inspector uv run python -m mcp_sentry.targets.$(TARGET)_server
+
+docker-up:
+	docker-compose up
+
+docker-down:
+	docker-compose down

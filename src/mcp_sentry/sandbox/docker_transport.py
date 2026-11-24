@@ -39,7 +39,7 @@ async def docker_socket_client(handle: ContainerHandle):
                     # Truncated payload due to socket closure mid-transmission
                     break
 
-                if stream_type != 1:  # skip stderr(2)/stdin(0), only stdout carries JSON-RPC
+                if stream_type != 1:
                     continue
 
                 buffer += payload

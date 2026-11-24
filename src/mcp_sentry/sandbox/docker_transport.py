@@ -14,7 +14,7 @@ MAX_STDIO_BUFFER_BYTES = 32 * 1024 * 1024  # 32 MB safety ceiling against unchun
 async def docker_socket_client(handle: ContainerHandle):
     read_stream_writer, read_stream = anyio.create_memory_object_stream(0)
     write_stream, write_stream_reader = anyio.create_memory_object_stream(0)
-    sock = handle.socket
+    sock = getattr(handle.socket, "_sock", handle.socket)
 
     def _recv_exact(sock, n: int) -> bytes:
         data = b""

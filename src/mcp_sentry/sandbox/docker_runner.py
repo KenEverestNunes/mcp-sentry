@@ -61,7 +61,8 @@ class DockerSandbox:
             params={"stdin": 1, "stdout": 1, "stream": 1},
         )
 
-        handle = ContainerHandle(container=container, socket=socket)
+        raw_socket = getattr(socket, "_sock", socket)
+        handle = ContainerHandle(container=container, socket=raw_socket)
         handle.watchdog = asyncio.create_task(self._kill_after_timeout(handle, timeout=15))
         return handle
 

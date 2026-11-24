@@ -1,7 +1,7 @@
 """Unit tests for the health check endpoint."""
 
-import pytest
 import httpx
+import pytest
 
 from mcp_sentry.api.main import app
 

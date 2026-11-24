@@ -47,6 +47,7 @@ async def test_call_tool_handles_empty_error_content() -> None:
             class DummyResult:
                 isError = True
                 content = []
+
             return DummyResult()
 
     client.session = DummySession()
@@ -64,12 +65,14 @@ async def test_call_tool_handles_non_text_content() -> None:
         async def call_tool(self, name: str, arguments: dict):
             class NonTextItem:
                 data = "binary-blob"
+
                 def __str__(self):
                     return "custom-binary-representation"
 
             class DummyResult:
                 isError = True
                 content = [NonTextItem()]
+
             return DummyResult()
 
     client.session = DummySession()
@@ -86,12 +89,14 @@ async def test_discovery_times_out_on_frozen_server(monkeypatch: pytest.MonkeyPa
     class HangingSession:
         async def list_tools(self):
             import asyncio
+
             await asyncio.sleep(10)
 
     client.session = HangingSession()
 
     # Test with a short timeout to run fast
     import mcp_sentry.client.mcp_client as mcp_mod
+
     original_wait_for = mcp_mod.asyncio.wait_for
 
     async def fast_wait_for(coro, timeout):
@@ -99,8 +104,6 @@ async def test_discovery_times_out_on_frozen_server(monkeypatch: pytest.MonkeyPa
 
     monkeypatch.setattr(mcp_mod.asyncio, "wait_for", fast_wait_for)
 
-    with pytest.raises(MCPConnectionError, match="Timed out while initializing or discovering tools"):
+    err_msg = "Timed out while initializing or discovering tools"
+    with pytest.raises(MCPConnectionError, match=err_msg):
         await client.discover_tools()
-
-
-

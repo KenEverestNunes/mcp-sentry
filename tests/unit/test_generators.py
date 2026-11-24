@@ -61,9 +61,9 @@ def test_generate_edge_cases_mutates_one_property_at_a_time() -> None:
 
     cases = generate_edge_cases(schema)
     baseline = {"count": DEFAULT_VALUES["integer"], "enabled": DEFAULT_VALUES["boolean"]}
-    expected_mutations = [
-        ("count", value) for value in _integer_edge_cases()
-    ] + [("enabled", value) for value in _boolean_edge_cases()]
+    expected_mutations = [("count", value) for value in _integer_edge_cases()] + [
+        ("enabled", value) for value in _boolean_edge_cases()
+    ]
 
     assert isinstance(cases, list)
     assert len(cases) == len(expected_mutations)
@@ -77,9 +77,7 @@ def test_generate_edge_cases_mutates_one_property_at_a_time() -> None:
             if case[property_name] != baseline[property_name]
         }
         assert changed_properties == (
-            {mutated_property}
-            if edge_value != baseline[mutated_property]
-            else set()
+            {mutated_property} if edge_value != baseline[mutated_property] else set()
         )
         assert all(
             case[property_name] == baseline[property_name]

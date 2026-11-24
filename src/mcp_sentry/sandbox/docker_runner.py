@@ -1,6 +1,7 @@
 import asyncio
 import atexit
 from dataclasses import dataclass, field
+
 import docker
 from docker.errors import APIError, ImageNotFound, NotFound
 
@@ -27,7 +28,7 @@ class SandboxStartError(Exception):
 @dataclass
 class ContainerHandle:
     container: object  # the Docker SDK's Container object
-    socket: object      # the attached stdio socket
+    socket: object  # the attached stdio socket
     watchdog: asyncio.Task = field(default=None, repr=False)
 
 

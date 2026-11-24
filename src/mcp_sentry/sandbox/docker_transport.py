@@ -1,10 +1,11 @@
 import asyncio
 from contextlib import asynccontextmanager
+
 import anyio
 from mcp import types
 from mcp.shared.message import SessionMessage
-from mcp_sentry.sandbox.docker_runner import ContainerHandle
 
+from mcp_sentry.sandbox.docker_runner import ContainerHandle
 
 MAX_STDIO_BUFFER_BYTES = 32 * 1024 * 1024  # 32 MB safety ceiling against unchunked memory leaks
 
@@ -70,7 +71,6 @@ async def docker_socket_client(handle: ContainerHandle):
                 except Exception:
                     pass
 
-
     async def socket_writer() -> None:
         try:
             async with write_stream_reader:
@@ -94,4 +94,3 @@ async def docker_socket_client(handle: ContainerHandle):
         writer_task.cancel()
         await read_stream.aclose()
         await write_stream.aclose()
-    

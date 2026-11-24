@@ -1,7 +1,9 @@
 from mcp.server.fastmcp import FastMCP
+
 from mcp_sentry.targets._fixtures import ORDERS
 
 mcp = FastMCP("fragile-target")
+
 
 @mcp.tool()
 def get_order(order_id: int) -> dict:

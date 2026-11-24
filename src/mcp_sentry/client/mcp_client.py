@@ -1,12 +1,15 @@
 import asyncio
 from contextlib import AsyncExitStack
 from typing import Any
+
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from mcp.shared.exceptions import McpError
+
 from mcp_sentry.models.schemas import ToolCallResult, ToolSchema
 from mcp_sentry.sandbox.docker_runner import ContainerHandle
 from mcp_sentry.sandbox.docker_transport import docker_socket_client
+
 
 class MCPConnectionError(RuntimeError):
     """Raised when an MCP server cannot be started or initialized."""
@@ -67,9 +70,9 @@ class MCPClient:
 
         try:
             if not self._initialized:
-                await asyncio.wait_for(self.session.initialize(), timeout=10)
+                await asyncio.wait_for(self.session.initialize(), timeout=25)
                 self._initialized = True
-            result = await asyncio.wait_for(self.session.list_tools(), timeout=10)
+            result = await asyncio.wait_for(self.session.list_tools(), timeout=20)
         except TimeoutError as exc:
             await self.close()
             raise MCPConnectionError("Timed out while initializing or discovering tools.") from exc
@@ -119,8 +122,7 @@ class MCPClient:
             error_msg = ""
             if result.content:
                 text_parts = [
-                    item.text if hasattr(item, "text") else str(item)
-                    for item in result.content
+                    item.text if hasattr(item, "text") else str(item) for item in result.content
                 ]
                 error_msg = "\n".join(text_parts)
             else:

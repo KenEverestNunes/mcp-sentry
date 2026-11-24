@@ -1,4 +1,5 @@
 import pytest
+
 from mcp_sentry.evaluation.engine import EvaluationEngine, is_clean_protocol_rejection
 from mcp_sentry.models.schemas import FuzzCase, ObserverReport, ToolCallResult
 
@@ -127,6 +128,26 @@ def test_unhandled_traceback_leaked(default_observer_clean: ObserverReport) -> N
     assert "unhandled exception leaked to caller" in verdict.reasons
 
 
+def test_unhandled_tool_exception_without_traceback_flagged_as_warning(
+    default_observer_clean: ObserverReport,
+) -> None:
+    engine = EvaluationEngine()
+    case = FuzzCase(
+        tool_name="parse_order_note",
+        arguments={"order_id": 1, "note": "bad_input"},
+        result=ToolCallResult(
+            success=False,
+            content=None,
+            error="Error executing tool parse_order_note: list index out of range",
+            raw_exception_text=None,
+        ),
+    )
+    verdict = engine.evaluate(case, default_observer_clean)
+    assert verdict.passed is False
+    assert verdict.severity == "warning"
+    assert "unhandled exception" in verdict.reasons[0]
+
+
 def test_unhandled_traceback_with_32602_is_flagged_as_warning(
     default_observer_clean: ObserverReport,
 ) -> None:
@@ -146,7 +167,8 @@ def test_unhandled_traceback_with_32602_is_flagged_as_warning(
             raw_exception_text=traceback_with_code,
         ),
     )
-    # Even though -32602 is mentioned, the presence of a traceback means it is NOT a clean protocol rejection
+    # Even though -32602 is mentioned, the presence of a traceback means it is NOT
+    # a clean protocol rejection
     assert is_clean_protocol_rejection(case.result) is False
     verdict = engine.evaluate(case, default_observer_clean)
     assert verdict.passed is False
@@ -212,7 +234,6 @@ def test_malformed_regex_pattern_does_not_crash(default_observer_clean: Observer
     verdict = engine.evaluate(case, default_observer_clean)
     assert verdict.passed is False
     assert "response contains a configured leak pattern" in verdict.reasons
-
 
 
 @pytest.mark.parametrize(

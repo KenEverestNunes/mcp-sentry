@@ -1,13 +1,28 @@
 import json
 import logging
 import re
-from typing import Any, Pattern, Sequence
+from collections.abc import Sequence
+from re import Pattern
+from typing import Any
+
 from mcp_sentry.evaluation.verdict import Verdict
 from mcp_sentry.models.schemas import FuzzCase, ObserverReport, ToolCallResult
 
 logger = logging.getLogger(__name__)
 
 TRACEBACK_PATTERN = re.compile(r"Traceback \(most recent call last\):", re.IGNORECASE)
+UNHANDLED_EXCEPTION_PATTERN = re.compile(
+    r"(?:Traceback \(most recent call last\):|"
+    r"list index out of range|"
+    r"\bIndexError\b|"
+    r"\bKeyError\b|"
+    r"\bZeroDivisionError\b|"
+    r"\bAttributeError\b|"
+    r"\bTypeError\b|"
+    r"\bUnboundLocalError\b|"
+    r"Error executing tool \w+: -?\d+$)",  # FastMCP KeyError printing raw int key
+    re.IGNORECASE,
+)
 MCP_INVALID_PARAMS_PATTERN = re.compile(
     r"(?:code\s*[:=]\s*-32602|\b-32602\b|invalid\s+params\b)",
     re.IGNORECASE,
@@ -38,7 +53,6 @@ def _serialize_content(content: Any) -> str:
         return json.dumps(content, default=str)
     except Exception:
         return str(content)
-
 
 
 def is_clean_protocol_rejection(result: ToolCallResult) -> bool:
@@ -85,7 +99,8 @@ class EvaluationEngine:
         2. observer_report.timed_out -> critical ("target froze / exceeded timeout")
         3. Raw traceback leaked -> warning ("unhandled exception leaked to caller")
         4. Clean protocol rejection -> passed=True, info ("target correctly rejected invalid input")
-        5. Configured leak pattern in content -> critical ("response contains a configured leak pattern")
+        5. Configured leak pattern in content -> critical
+           ("response contains a configured leak pattern")
         6. Otherwise -> passed=True, info ("tool call executed safely")
         """
         # 1. Container crash check
@@ -106,9 +121,9 @@ class EvaluationEngine:
                 severity="critical",
             )
 
-        # 3. Raw traceback text in result.error or raw_exception_text
+        # 3. Unhandled exceptions or raw tracebacks leaked in result.error or raw_exception_text
         error_blob = f"{case.result.error or ''} {case.result.raw_exception_text or ''}"
-        if TRACEBACK_PATTERN.search(error_blob):
+        if UNHANDLED_EXCEPTION_PATTERN.search(error_blob):
             return Verdict(
                 fuzz_case=case,
                 passed=False,
@@ -142,7 +157,16 @@ class EvaluationEngine:
                     severity="critical",
                 )
 
-        # 6. Pass
+        # 6. Handled validation rejection (tool safely handled and rejected invalid input)
+        if not case.result.success:
+            return Verdict(
+                fuzz_case=case,
+                passed=True,
+                reasons=["target correctly rejected invalid input"],
+                severity="info",
+            )
+
+        # 7. Safe successful execution
         return Verdict(
             fuzz_case=case,
             passed=True,

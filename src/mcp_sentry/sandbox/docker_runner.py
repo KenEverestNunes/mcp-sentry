@@ -33,8 +33,14 @@ class ContainerHandle:
 
 
 class DockerSandbox:
-    def __init__(self) -> None:
-        self.client = docker.from_env()
+    def __init__(self, client: docker.DockerClient | None = None) -> None:
+        self._client = client
+
+    @property
+    def client(self) -> docker.DockerClient:
+        if self._client is None:
+            self._client = docker.from_env()
+        return self._client
 
     async def start(self, image: str) -> ContainerHandle:
         try:

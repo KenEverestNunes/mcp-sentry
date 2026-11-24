@@ -17,7 +17,7 @@ class SessionOrchestrator:
     """
 
     def __init__(self, sandbox: DockerSandbox | None = None) -> None:
-        self.sandbox = sandbox or DockerSandbox()
+        self.sandbox = sandbox
         self.evaluator = EvaluationEngine()
         self.fuzzer = FuzzEngine()
 
@@ -59,7 +59,8 @@ class SessionOrchestrator:
                 except Exception:
                     pass
 
-        handle = await self.sandbox.start(image)
+        sandbox = self.sandbox or DockerSandbox()
+        handle = await sandbox.start(image)
         client = MCPClient()
         stop_event = asyncio.Event()
         observer = Observer()
@@ -90,4 +91,4 @@ class SessionOrchestrator:
                 await client.close()
             except Exception:
                 pass
-            await self.sandbox.stop(handle)
+            await sandbox.stop(handle)

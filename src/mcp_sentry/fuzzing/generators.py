@@ -3,6 +3,7 @@ import logging
 logger = logging.getLogger(__name__)
 MAX_FUZZ_STRING_LEN = 10_000
 
+
 def generate_edge_cases(schema: dict) -> list[dict]:
     properties = schema.get("properties", {})
 
@@ -29,6 +30,7 @@ def generate_edge_cases(schema: dict) -> list[dict]:
 
     return results
 
+
 DEFAULT_VALUES = {
     "string": "default",
     "integer": 1,
@@ -36,6 +38,7 @@ DEFAULT_VALUES = {
     "object": {},
     "array": [],
 }
+
 
 def _string_edge_cases() -> list[str]:
     return [
@@ -46,40 +49,46 @@ def _string_edge_cases() -> list[str]:
         "newline\ncharacter",
         "tab\tcharacter",
         "emoji😊",
-        "\x00"
+        "\x00",
     ]
+
 
 def _integer_edge_cases() -> list[int]:
     return [
         0,
-        -1,  
-        1, 
-        -(2**31),  
-        2**31 - 1,   
-        -(2**63), 
-        2**63 - 1,   
+        -1,
+        1,
+        -(2**31),
+        2**31 - 1,
+        -(2**63),
+        2**63 - 1,
     ]
 
+
 def _boolean_edge_cases() -> list[bool]:
-    return [True,False, "true", "false", 1, 0, None]
+    return [True, False, "true", "false", 1, 0, None]
+
 
 def _build_nested(depth: int):
     if depth == 0:
         return "leaf"
     return {"nested": _build_nested(depth - 1)}
 
+
 def _object_edge_cases() -> list[dict]:
     nested = "leaf"
     for _ in range(10):
         nested = {"nested": nested}
 
-    return [{},nested]
+    return [{}, nested]
+
 
 def _array_edge_cases() -> list[list]:
     return [
         [],
-        [i for i in range(MAX_FUZZ_STRING_LEN)], 
+        [i for i in range(MAX_FUZZ_STRING_LEN)],
     ]
+
 
 TYPE_TO_GENERATOR = {
     "string": _string_edge_cases,

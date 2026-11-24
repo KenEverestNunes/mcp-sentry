@@ -18,3 +18,9 @@ build/
 htmlcov/
 *.log
 .DS_Store
+
+# Agent & local audit scratch
+.agents/
+.lavish/
+failure_modes_audit.md
+WORKTREE_FAILURE_MODES_AUDIT.md

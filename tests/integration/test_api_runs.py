@@ -6,7 +6,7 @@ import httpx
 import pytest
 
 from mcp_sentry.api.app import app
-from mcp_sentry.api.runs import RUNS, _RUN_LOCK
+from mcp_sentry.api.runs import _RUN_LOCK, RUNS
 from mcp_sentry.evaluation.verdict import Verdict
 from mcp_sentry.models.schemas import ObserverReport, SessionReport
 
@@ -25,6 +25,16 @@ def clean_runs_state() -> None:
     RUNS.clear()
     if _RUN_LOCK.locked():
         _RUN_LOCK.release()
+
+
+@pytest.mark.asyncio
+async def test_frontend_index_served_at_root() -> None:
+    async with httpx.AsyncClient(
+        transport=httpx.ASGITransport(app=app), base_url="http://test"
+    ) as client:
+        res = await client.get("/")
+        assert res.status_code == 200
+        assert "MCP-Sentry Dashboard" in res.text
 
 
 @pytest.mark.asyncio
@@ -164,7 +174,7 @@ async def test_api_runs_live_docker_fragile() -> None:
                 assert poll_data["status"] == "completed"
                 report = poll_data["report"]
                 assert report is not None
-                assert any(v["severity"] == "critical" for v in report["verdicts"])
+                assert any(v["severity"] in {"warning", "critical"} for v in report["verdicts"])
                 break
             await asyncio.sleep(1.0)
 

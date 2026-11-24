@@ -1,6 +1,8 @@
 import asyncio
 import re
+
 from docker.errors import APIError, NotFound
+
 from mcp_sentry.models.schemas import ObserverReport
 from mcp_sentry.sandbox.docker_runner import ContainerHandle
 

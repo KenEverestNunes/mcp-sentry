@@ -1,0 +1,31 @@
+flowchart TD
+    subgraph ClientLayer ["1. Discovery & Control"]
+        Runner["CLI / Test Runner"] --> Client["MCP Client (Async Transport)"]
+        Client -->|"tools/list"| Target
+    end
+
+    subgraph FuzzLayer ["2. Adversarial Fuzzing Engine"]
+        Fuzzer["FuzzEngine"]
+        Gen["Type Generators<br/><i>(Bounds, Null bytes, 2^63-1)</i>"] --> Fuzzer
+        Payloads["Malicious Payloads<br/><i>(Cmd Inj, Traversal, Prompt Inj)</i>"] --> Fuzzer
+        Fuzzer -->|"call_tool (sequential / parallel)"| Client
+    end
+
+    subgraph SandboxLayer ["3. Isolated Docker Sandbox (256MB RAM / No Network)"]
+        Target["Target MCP Server<br/><i>(Healthy / Fragile / Leaky)</i>"]
+        Observer["Container Observer<br/><i>(Polls stats every 0.5s & exit codes)</i>"]
+        Target -.->|"Resource Spikes / OOM / Segfaults"| Observer
+    end
+
+    subgraph EvalLayer ["4. Evaluation Engine"]
+        Verdict["Verdict Engine"]
+        Client -->|"ToolCallResult (Error / Content)"| Verdict
+        Observer -->|"ObserverReport (Crash / Memory / ExitCode)"| Verdict
+        Config["TargetConfig (Leak Regex Patterns)"] --> Verdict
+        Verdict --> FinalReport["Final Verdict<br/><b>(Pass / Info / Warning / Critical)</b>"]
+    end
+
+    classDef container fill:#1e1e2e,stroke:#89b4fa,stroke-width:2px,color:#cdd6f4;
+    classDef highlight fill:#313244,stroke:#a6e3a1,stroke-width:2px,color:#cdd6f4;
+    class Target,Observer highlight;
+    class Runner,Fuzzer,Verdict container;

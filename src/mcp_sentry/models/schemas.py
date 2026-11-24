@@ -1,10 +1,13 @@
 from typing import Any, Literal
+
 from pydantic import BaseModel
+
 
 class ToolSchema(BaseModel):
     name: str
     description: str | None = None
     input_schema: dict[str, Any]
+
 
 class ToolCallResult(BaseModel):
     success: bool
@@ -12,10 +15,12 @@ class ToolCallResult(BaseModel):
     error: str | None
     raw_exception_text: str | None
 
+
 class FuzzCase(BaseModel):
     tool_name: str
     arguments: dict[str, Any]
     result: ToolCallResult
+
 
 class ObserverReport(BaseModel):
     crashed: bool
@@ -41,5 +46,3 @@ class RunRecord(BaseModel):
 
 class RunRequest(BaseModel):
     target: str
-
-

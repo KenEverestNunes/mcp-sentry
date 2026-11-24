@@ -1,11 +1,13 @@
 import asyncio
 from contextlib import asynccontextmanager
+
 import anyio
 from mcp import types
 from mcp.shared.message import SessionMessage
+
 from mcp_sentry.sandbox.docker_runner import ContainerHandle
 
-MAX_STDIO_BUFFER_BYTES = 32 * 1024 * 1024
+MAX_STDIO_BUFFER_BYTES = 32 * 1024 * 1024  # 32 MB safety ceiling against unchunked memory leaks
 
 
 @asynccontextmanager
@@ -34,6 +36,7 @@ async def docker_socket_client(handle: ContainerHandle):
                 payload_size = int.from_bytes(header[4:8], "big")
                 payload = await asyncio.to_thread(_recv_exact, sock, payload_size)
                 if len(payload) < payload_size:
+                    # Truncated payload due to socket closure mid-transmission
                     break
 
                 if stream_type != 1:
@@ -41,6 +44,7 @@ async def docker_socket_client(handle: ContainerHandle):
 
                 buffer += payload
 
+                # Guard against unbounded buffer growth on unchunked streams
                 if len(buffer) > MAX_STDIO_BUFFER_BYTES:
                     break
 

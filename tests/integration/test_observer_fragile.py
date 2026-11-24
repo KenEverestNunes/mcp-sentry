@@ -1,5 +1,7 @@
 import asyncio
+
 import pytest
+
 from mcp_sentry.client import MCPClient
 from mcp_sentry.sandbox.docker_runner import DockerSandbox
 from mcp_sentry.sandbox.observer import Observer
@@ -20,7 +22,8 @@ async def test_observer_reports_fragile_container_crash() -> None:
                 {"order_id": 1, "note": "no colon"},
             )
         except Exception:
-            pass  # expected: the crash breaks the connection, Observer's report is what we're testing
+            # Expected: the crash breaks connection; Observer's report is what we test
+            pass
 
         report = await observer_task
         assert report.crashed or report.stderr_tail

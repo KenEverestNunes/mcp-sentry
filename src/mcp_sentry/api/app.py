@@ -1,6 +1,10 @@
 """FastAPI application for MCP-Sentry."""
 
-from fastapi import FastAPI
+from collections.abc import Awaitable, Callable
+from pathlib import Path
+
+from fastapi import FastAPI, Request, Response
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from mcp_sentry.api.runs import router as runs_router
@@ -11,6 +15,17 @@ app = FastAPI(
     description="AI-powered MCP error monitoring and fuzzing triage.",
     version="0.1.0",
 )
+
+
+@app.middleware("http")
+async def add_no_cache_headers(
+    request: Request, call_next: Callable[[Request], Awaitable[Response]]
+) -> Response:
+    response: Response = await call_next(request)
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    response.headers["Pragma"] = "no-cache"
+    response.headers["Expires"] = "0"
+    return response
 
 
 class HealthResponse(BaseModel):
@@ -30,3 +45,8 @@ async def get_targets() -> list[str]:
 
 
 app.include_router(runs_router)
+
+# Mount frontend static directory at root
+_frontend_dir = Path(__file__).resolve().parent.parent.parent.parent / "frontend"
+if _frontend_dir.exists():
+    app.mount("/", StaticFiles(directory=str(_frontend_dir), html=True), name="frontend")

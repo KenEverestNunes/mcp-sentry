@@ -1,4 +1,3 @@
-import pytest
 from mcp_sentry.sandbox.observer import Observer
 
 

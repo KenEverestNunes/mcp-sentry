@@ -1,11 +1,13 @@
 from dataclasses import dataclass
 
+
 @dataclass
 class TargetConfig:
     name: str
     command: str
     args: list[str]
     leak_patterns: list[str]
+
 
 TARGET_CONFIGS = {
     "healthy": TargetConfig(

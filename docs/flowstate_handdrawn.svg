@@ -1,0 +1,242 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1250 720" width="100%" height="100%" style="background:#faf8f5;">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&amp;family=Architects+Daughter&amp;display=swap');
+      .title { font-family: 'Architects Daughter', 'Caveat', cursive; font-size: 32px; font-weight: bold; fill: #1a202c; }
+      .subtitle { font-family: 'Caveat', cursive; font-size: 20px; fill: #718096; }
+      .box-title { font-family: 'Architects Daughter', cursive; font-size: 19px; font-weight: bold; }
+      .text-reg { font-family: 'Caveat', cursive; font-size: 18px; fill: #4a5568; line-height: 1.35; }
+      .text-bold { font-family: 'Caveat', cursive; font-size: 19px; font-weight: 700; fill: #2d3748; }
+      .text-accent { font-family: 'Caveat', cursive; font-size: 18px; font-weight: 700; fill: #c53030; }
+      .text-green { font-family: 'Caveat', cursive; font-size: 18px; font-weight: 700; fill: #22543d; }
+    </style>
+  </defs>
+
+  <!-- Title & Underline -->
+  <g transform="translate(60, 45)">
+    <text x="0" y="0" class="title">MCP-Sentry — Scan Lifecycle &amp; State Transitions</text>
+    <path d="M 0 12 Q 260 16 540 10 Q 580 9 600 14" stroke="#3182ce" stroke-width="3" fill="none" stroke-linecap="round"/>
+    <text x="0" y="38" class="subtitle">End-to-End Execution Flow from Target Provisioning to Verdict Classification</text>
+  </g>
+
+  <!-- STEP 1: INITIALIZE -->
+  <g><rect x="60" y="110" width="200" height="150" rx="12" fill="#ebf8ff" />
+<path d="M 57.0 110.0 Q 157.2 108.8 263.0 110.3" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 57.5 111.2 Q 158.9 111.1 261.8 110.0" stroke="#3182ce" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 260.0 107.0 Q 257.8 185.0 259.1 263.0" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 260.4 107.1 Q 257.6 183.8 258.2 263.3" stroke="#3182ce" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 263.0 260.0 Q 157.0 262.1 57.0 260.6" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 262.0 261.4 Q 160.8 259.7 56.5 259.4" stroke="#3182ce" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 60.0 263.0 Q 61.7 185.6 59.2 107.0" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 60.1 264.4 Q 60.8 185.9 58.8 107.2" stroke="#3182ce" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="80" y="145" class="box-title" fill="#2b6cb0">1. INITIALIZE</text>
+  <text x="80" y="175" class="text-bold">• Target Registry:</text>
+  <text x="95" y="200" class="text-reg">- Load TargetConfig</text>
+  <text x="95" y="223" class="text-reg">- Precompile leak regex</text>
+  <text x="80" y="248" class="text-reg">• 15s global timeout</text>
+
+  <!-- ARROW 1 -> 2 -->
+  <g><path d="M 260 185 Q 280.0 200.0 300 185" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 293.6 197.4 L 300 185 L 286.3 187.7" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+
+  <!-- STEP 2: PROVISION DOCKER -->
+  <g><rect x="300" y="110" width="200" height="150" rx="12" fill="#f0fff4" />
+<path d="M 297.0 110.0 Q 400.7 112.5 503.0 110.7" stroke="#38a169" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 295.6 109.2 Q 400.3 111.1 502.4 109.4" stroke="#38a169" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 500.0 107.0 Q 497.3 183.7 499.5 263.0" stroke="#38a169" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 499.6 106.1 Q 500.3 184.5 498.8 264.3" stroke="#38a169" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 503.0 260.0 Q 400.7 258.2 297.0 260.3" stroke="#38a169" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 502.6 261.5 Q 400.9 258.8 297.4 260.5" stroke="#38a169" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 300.0 263.0 Q 302.2 186.7 300.4 107.0" stroke="#38a169" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 299.4 262.3 Q 299.1 183.1 299.5 108.3" stroke="#38a169" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="320" y="145" class="box-title" fill="#22543d">2. PROVISION</text>
+  <text x="320" y="175" class="text-bold">• DockerSandbox.start()</text>
+  <text x="335" y="200" class="text-reg">- 256MB RAM limit</text>
+  <text x="335" y="223" class="text-reg">- 0.5 nano_cpus</text>
+  <text x="335" y="248" class="text-reg">- Network: DISABLED</text>
+
+  <!-- ARROW 2 -> 3 -->
+  <g><path d="M 500 185 Q 520.0 200.0 540 185" stroke="#38a169" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 533.6 197.4 L 540 185 L 526.3 187.7" stroke="#38a169" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+
+  <!-- STEP 3: DISCOVERY & OBSERVE -->
+  <g><rect x="540" y="110" width="210" height="150" rx="12" fill="#fffff0" />
+<path d="M 537.0 110.0 Q 643.9 111.3 753.0 110.8" stroke="#d69e2e" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 536.9 109.3 Q 644.6 112.0 752.2 110.9" stroke="#d69e2e" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 750.0 107.0 Q 750.3 187.4 749.5 263.0" stroke="#d69e2e" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 751.5 107.0 Q 749.4 183.9 748.3 261.6" stroke="#d69e2e" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 753.0 260.0 Q 645.8 261.4 537.0 259.2" stroke="#d69e2e" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 752.6 261.5 Q 644.7 257.9 537.1 260.6" stroke="#d69e2e" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 540.0 263.0 Q 537.4 186.3 540.7 107.0" stroke="#d69e2e" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 539.3 263.4 Q 541.1 185.1 539.6 106.8" stroke="#d69e2e" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="560" y="145" class="box-title" fill="#b7791f">3. DISCOVER &amp; WATCH</text>
+  <text x="560" y="175" class="text-bold">• Connect stdio socket</text>
+  <text x="560" y="200" class="text-reg">• session.list_tools()</text>
+  <text x="560" y="225" class="text-bold">• Spawn Observer task:</text>
+  <text x="575" y="248" class="text-reg">- Polls stats every 0.5s</text>
+
+  <!-- ARROW 3 -> 4 -->
+  <g><path d="M 750 185 Q 770.0 200.0 790 185" stroke="#d69e2e" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 783.6 197.4 L 790 185 L 776.3 187.7" stroke="#d69e2e" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+
+  <!-- STEP 4: FUZZ GENERATOR -->
+  <g><rect x="790" y="110" width="200" height="150" rx="12" fill="#fffaf0" />
+<path d="M 787.0 110.0 Q 892.7 112.2 993.0 109.9" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 786.0 111.2 Q 889.1 110.0 994.1 109.3" stroke="#dd6b20" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 990.0 107.0 Q 990.8 182.9 990.3 263.0" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 990.8 107.1 Q 991.2 185.2 988.8 262.5" stroke="#dd6b20" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 993.0 260.0 Q 892.6 261.8 787.0 259.0" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 991.7 261.1 Q 891.3 258.7 788.3 257.8" stroke="#dd6b20" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 790.0 263.0 Q 787.4 186.6 790.0 107.0" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 789.9 263.1 Q 791.0 183.5 789.3 108.1" stroke="#dd6b20" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="810" y="145" class="box-title" fill="#c05621">4. FUZZ GENERATION</text>
+  <text x="810" y="175" class="text-bold">• Schema edge cases</text>
+  <text x="825" y="200" class="text-reg">- Boundary values</text>
+  <text x="825" y="223" class="text-reg">- 1-factor mutations</text>
+  <text x="810" y="248" class="text-accent">• Security payloads</text>
+
+  <!-- ARROW 4 -> 5 -->
+  <g><path d="M 990 185 Q 1010.0 200.0 1030 185" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 1023.6 197.4 L 1030 185 L 1016.3 187.7" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+
+  <!-- STEP 5: CALL TOOL -->
+  <g><rect x="1030" y="110" width="180" height="150" rx="12" fill="#faf5ff" />
+<path d="M 1027.0 110.0 Q 1118.3 110.2 1213.0 109.8" stroke="#805ad5" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1026.4 111.5 Q 1120.9 108.7 1213.4 109.7" stroke="#805ad5" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1210.0 107.0 Q 1207.7 183.3 1210.0 263.0" stroke="#805ad5" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1209.2 106.2 Q 1209.4 185.4 1208.7 263.4" stroke="#805ad5" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1213.0 260.0 Q 1122.4 261.9 1027.0 259.5" stroke="#805ad5" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1213.5 259.1 Q 1118.3 258.7 1025.9 260.8" stroke="#805ad5" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1030.0 263.0 Q 1029.9 186.7 1030.1 107.0" stroke="#805ad5" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1028.8 262.8 Q 1031.3 183.8 1029.9 106.9" stroke="#805ad5" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="1050" y="145" class="box-title" fill="#553c9e">5. CALL TOOL</text>
+  <text x="1050" y="175" class="text-reg">• session.call_tool()</text>
+  <text x="1050" y="200" class="text-reg">• Catch McpError</text>
+  <text x="1050" y="225" class="text-bold">• Build FuzzCase:</text>
+  <text x="1065" y="248" class="text-reg">- Input + Result</text>
+
+  <!-- Arrow 5 down to Evaluation Matrix -->
+  <g><path d="M 1120 260 Q 896.4 300.4 680 370" stroke="#805ad5" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 690.1 360.3 L 680 370 L 693.9 371.9" stroke="#805ad5" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="904.4" y="292.4" font-family="'Caveat', 'Segoe Print', cursive" font-size="16" fill="#805ad5" font-weight="bold">ToolCallResult</text></g>
+  
+  <!-- Observer telemetry arrow down -->
+  <g><path d="M 645 260 Q 630.0 315.0 645 370" stroke="#d69e2e" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 635.8 359.4 L 645 370 L 647.6 356.2" stroke="#d69e2e" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="638.0" y="307.0" font-family="'Caveat', 'Segoe Print', cursive" font-size="16" fill="#d69e2e" font-weight="bold">ObserverReport (Peak RAM, Crashed, ExitCode)</text></g>
+
+  <!-- STEP 6: EVALUATION ENGINE DECISION MATRIX -->
+  <g><rect x="60" y="380" width="620" height="300" rx="12" fill="#ffffff" />
+<path d="M 57.0 380.0 Q 371.0 383.1 683.0 380.5" stroke="#4a5568" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 56.5 381.1 Q 368.4 379.8 682.2 379.5" stroke="#4a5568" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 680.0 377.0 Q 679.5 528.7 679.9 683.0" stroke="#4a5568" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 679.8 378.1 Q 678.9 531.7 680.0 681.7" stroke="#4a5568" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 683.0 680.0 Q 372.0 683.3 57.0 681.0" stroke="#4a5568" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 682.0 680.0 Q 371.7 681.9 56.1 680.7" stroke="#4a5568" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 60.0 683.0 Q 58.8 532.9 59.1 377.0" stroke="#4a5568" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 59.9 682.8 Q 58.6 531.1 60.5 378.5" stroke="#4a5568" stroke-width="1.75" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="85" y="415" class="box-title" fill="#1a202c">6. Evaluation Decision Matrix (EvaluationEngine.evaluate)</text>
+  <text x="85" y="445" class="text-bold">Sequential Rule Checks (highest severity first):</text>
+
+  <g><rect x="80" y="460" width="580" height="42" rx="12" fill="#fff5f5" />
+<path d="M 77.0 460.0 Q 371.3 458.0 663.0 460.1" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 77.2 460.1 Q 369.2 461.9 663.7 458.8" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 660.0 457.0 Q 660.1 483.1 660.2 505.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 658.7 456.1 Q 658.7 482.8 660.5 505.5" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 663.0 502.0 Q 367.7 504.1 77.0 501.5" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 663.4 501.8 Q 369.0 502.1 77.3 501.5" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 80.0 505.0 Q 78.7 482.3 80.9 457.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 80.5 504.4 Q 79.4 480.6 80.3 457.8" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="95" y="487" class="text-bold" fill="#c53030">[Rule 1] Observer.crashed == True?</text>
+  <text x="360" y="487" class="text-accent">→ FAIL (CRITICAL) "Target process crashed"</text>
+
+  <g><rect x="80" y="508" width="580" height="42" rx="12" fill="#fff5f5" />
+<path d="M 77.0 508.0 Q 369.7 510.6 663.0 507.1" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 76.1 507.3 Q 372.0 505.9 664.3 508.3" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 660.0 505.0 Q 659.6 526.9 660.8 553.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 660.3 506.5 Q 661.7 529.8 661.2 551.5" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 663.0 550.0 Q 368.8 551.3 77.0 550.6" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 661.8 548.8 Q 371.8 548.9 77.2 550.0" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 80.0 553.0 Q 81.4 527.2 80.2 505.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 80.0 554.2 Q 80.6 528.1 81.2 503.8" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="95" y="535" class="text-bold" fill="#c53030">[Rule 2] Observer.timed_out == True?</text>
+  <text x="360" y="535" class="text-accent">→ FAIL (CRITICAL) "Target froze / RAM &gt; 200MB"</text>
+
+  <g><rect x="80" y="556" width="580" height="42" rx="12" fill="#fffaf0" />
+<path d="M 77.0 556.0 Q 368.7 552.9 663.0 555.8" stroke="#fbd38d" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 76.3 556.7 Q 371.1 556.5 663.2 555.6" stroke="#fbd38d" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 660.0 553.0 Q 657.0 579.3 659.0 601.0" stroke="#fbd38d" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 661.0 553.2 Q 661.1 577.2 658.0 599.9" stroke="#fbd38d" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 663.0 598.0 Q 372.4 599.6 77.0 597.6" stroke="#fbd38d" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 662.1 597.2 Q 371.4 599.4 75.8 598.5" stroke="#fbd38d" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 80.0 601.0 Q 79.8 577.7 80.8 553.0" stroke="#fbd38d" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 81.1 602.4 Q 79.0 578.7 81.7 554.1" stroke="#fbd38d" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="95" y="583" class="text-bold" fill="#dd6b20">[Rule 3] Traceback in result.error?</text>
+  <text x="360" y="583" class="text-reg" fill="#c05621">→ FAIL (WARNING) "Raw traceback leaked"</text>
+
+  <g><rect x="80" y="604" width="580" height="42" rx="12" fill="#fff5f5" />
+<path d="M 77.0 604.0 Q 371.4 602.5 663.0 603.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 78.1 604.9 Q 371.7 604.7 662.3 603.9" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 660.0 601.0 Q 661.8 627.2 659.2 649.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 659.9 600.4 Q 658.5 626.3 660.1 648.2" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 663.0 646.0 Q 368.2 644.5 77.0 645.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 662.3 646.4 Q 371.5 647.4 76.7 646.5" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 80.0 649.0 Q 82.7 622.7 80.1 601.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 81.4 648.3 Q 81.9 623.7 78.9 600.8" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="95" y="631" class="text-bold" fill="#c53030">[Rule 4] Leak pattern regex matches?</text>
+  <text x="360" y="631" class="text-accent">→ FAIL (CRITICAL) "Secret disclosure detected"</text>
+
+  <g><rect x="80" y="652" width="580" height="42" rx="12" fill="#f0fff4" />
+<path d="M 77.0 652.0 Q 368.9 652.9 663.0 652.5" stroke="#9ae6b4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 77.2 651.3 Q 370.0 651.8 663.6 651.0" stroke="#9ae6b4" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 660.0 649.0 Q 660.7 674.3 660.9 697.0" stroke="#9ae6b4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 659.6 647.7 Q 661.4 673.7 661.3 696.5" stroke="#9ae6b4" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 663.0 694.0 Q 372.1 695.1 77.0 693.6" stroke="#9ae6b4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 662.7 693.7 Q 369.2 693.1 76.4 692.5" stroke="#9ae6b4" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 80.0 697.0 Q 82.6 674.1 79.8 649.0" stroke="#9ae6b4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 79.4 697.1 Q 81.5 673.5 78.3 648.4" stroke="#9ae6b4" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="95" y="679" class="text-green">[Rule 5] Protocol Rejection (-32602)?</text>
+  <text x="360" y="679" class="text-green">→ PASS (INFO) "Input rejected by schema cleanly"</text>
+
+  <!-- OUTCOME ARROWS -->
+  <g><path d="M 680 490 Q 715.0 505.0 750 490" stroke="#c53030" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 740.8 500.6 L 750 490 L 736.0 489.4" stroke="#c53030" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+  <g><path d="M 680 610 Q 715.0 625.0 750 610" stroke="#276749" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 740.8 620.6 L 750 610 L 736.0 609.4" stroke="#276749" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+
+  <!-- OUTCOME 1: FAILED -->
+  <g><rect x="750" y="430" width="460" height="115" rx="12" fill="#fff5f5" />
+<path d="M 747.0 430.0 Q 980.5 430.9 1213.0 429.9" stroke="#f56565" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 746.1 429.9 Q 979.9 429.7 1214.2 430.7" stroke="#f56565" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1210.0 427.0 Q 1207.2 487.6 1209.3 548.0" stroke="#f56565" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1211.0 427.8 Q 1210.2 486.8 1209.9 547.2" stroke="#f56565" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1213.0 545.0 Q 977.1 543.2 747.0 544.4" stroke="#f56565" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1211.7 544.7 Q 979.9 546.1 747.4 543.5" stroke="#f56565" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 750.0 548.0 Q 750.2 486.0 750.4 427.0" stroke="#f56565" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 750.8 548.8 Q 750.8 485.5 749.2 426.8" stroke="#f56565" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="770" y="465" class="box-title" fill="#c53030">❌ VERDICT: FAILED (Critical / Warning)</text>
+  <text x="770" y="495" class="text-reg">• Flagged finding with specific reproduction input payload</text>
+  <text x="770" y="520" class="text-reg">• Records peak memory, stderr tail, and exact error traceback</text>
+  <text x="770" y="540" class="text-accent">• Container force-killed and auto-removed</text>
+
+  <!-- OUTCOME 2: PASSED -->
+  <g><rect x="750" y="565" width="460" height="115" rx="12" fill="#f0fff4" />
+<path d="M 747.0 565.0 Q 982.7 564.8 1213.0 564.4" stroke="#48bb78" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 748.0 564.9 Q 978.2 563.7 1213.9 564.9" stroke="#48bb78" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1210.0 562.0 Q 1211.1 625.2 1211.0 683.0" stroke="#48bb78" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1210.7 562.0 Q 1212.1 623.0 1212.0 683.1" stroke="#48bb78" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1213.0 680.0 Q 981.5 680.2 747.0 680.8" stroke="#48bb78" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1213.4 680.8 Q 979.0 679.4 747.1 681.2" stroke="#48bb78" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 750.0 683.0 Q 747.2 621.2 749.5 562.0" stroke="#48bb78" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 750.1 681.9 Q 748.9 621.8 748.7 562.6" stroke="#48bb78" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="770" y="600" class="box-title" fill="#22543d">✅ VERDICT: PASSED (Certified Production-Ready)</text>
+  <text x="770" y="630" class="text-reg">• Handled all type mutations, edge cases &amp; injections safely</text>
+  <text x="770" y="655" class="text-reg">• Zero memory spikes, no hung processes, zero secret leakage</text>
+  <text x="770" y="675" class="text-green">• Clean error boundaries across all registered tools</text>
+</svg>

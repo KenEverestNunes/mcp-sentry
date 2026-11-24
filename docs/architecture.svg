@@ -1,0 +1,291 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1250 860" width="100%" height="100%" style="background:#faf8f5;">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Caveat:wght@400;600;700&amp;family=Architects+Daughter&amp;display=swap');
+      .title { font-family: 'Architects Daughter', 'Caveat', cursive; font-size: 34px; font-weight: bold; fill: #1a202c; }
+      .subtitle { font-family: 'Caveat', cursive; font-size: 20px; fill: #718096; }
+      .box-title { font-family: 'Architects Daughter', cursive; font-size: 20px; font-weight: bold; fill: #2d3748; }
+      .text-reg { font-family: 'Caveat', cursive; font-size: 18px; fill: #4a5568; line-height: 1.4; }
+      .text-bold { font-family: 'Caveat', cursive; font-size: 19px; font-weight: 700; fill: #2d3748; }
+      .text-accent { font-family: 'Caveat', cursive; font-size: 18px; font-weight: 700; fill: #e53e3e; }
+      .text-green { font-family: 'Caveat', cursive; font-size: 18px; font-weight: 700; fill: #2f855a; }
+      .badge { font-family: 'Caveat', cursive; font-size: 15px; font-weight: bold; }
+    </style>
+  </defs>
+
+  <!-- Title & Hand-drawn Underline -->
+  <g transform="translate(60, 45)">
+    <text x="0" y="0" class="title">MCP-Sentry — System Architecture</text>
+    <path d="M 0 12 Q 220 18 480 10 Q 510 9 530 14" stroke="#e53e3e" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+    <text x="0" y="38" class="subtitle">Dynamic Security Scanner, Fuzzing Engine &amp; Container Observer for MCP</text>
+  </g>
+
+  <!-- 1. ORCHESTRATOR & CONFIG -->
+  <g><rect x="60" y="110" width="270" height="190" rx="12" fill="#e6fffa" />
+<path d="M 57.0 110.0 Q 192.2 108.8 333.0 110.3" stroke="#319795" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 57.5 111.2 Q 193.9 111.1 331.8 110.0" stroke="#319795" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 330.0 107.0 Q 327.8 205.0 329.1 303.0" stroke="#319795" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 330.4 107.1 Q 327.6 203.8 328.2 303.3" stroke="#319795" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 333.0 300.0 Q 192.0 302.1 57.0 300.6" stroke="#319795" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 332.0 301.4 Q 195.8 299.7 56.5 299.4" stroke="#319795" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 60.0 303.0 Q 61.7 205.6 59.2 107.0" stroke="#319795" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 60.1 304.4 Q 60.8 205.9 58.8 107.2" stroke="#319795" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="80" y="145" class="box-title" fill="#234e52">1. CLI &amp; Orchestrator</text>
+  <text x="80" y="180" class="text-bold">• Target Registry (Config):</text>
+  <text x="95" y="205" class="text-reg">- Target names &amp; launch commands</text>
+  <text x="95" y="230" class="text-reg">- Leak patterns (regex strings)</text>
+  <text x="80" y="260" class="text-bold">• Global Scan Budget (15s hard kill)</text>
+  <text x="80" y="285" class="text-reg">• Disposable container lifecycle</text>
+
+  <!-- 2. FUZZING ENGINE -->
+  <g><rect x="60" y="335" width="270" height="290" rx="12" fill="#fffaf0" />
+<path d="M 57.0 335.0 Q 195.7 337.5 333.0 335.7" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 55.6 334.2 Q 195.3 336.1 332.4 334.4" stroke="#dd6b20" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 330.0 332.0 Q 327.3 478.7 329.5 628.0" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 329.6 331.1 Q 330.3 479.5 328.8 629.3" stroke="#dd6b20" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 333.0 625.0 Q 195.7 623.2 57.0 625.3" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 332.6 626.5 Q 195.9 623.8 57.4 625.5" stroke="#dd6b20" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 60.0 628.0 Q 62.2 481.7 60.4 332.0" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 59.4 627.3 Q 59.1 478.1 59.5 333.3" stroke="#dd6b20" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="80" y="370" class="box-title" fill="#c05621">2. Fuzzing Engine</text>
+  <text x="80" y="405" class="text-bold">A. Type-Based Generators:</text>
+  <text x="95" y="430" class="text-reg">• int: 0, -1, 2^63-1, -(2^63)</text>
+  <text x="95" y="455" class="text-reg">• str: "", 10k chars, null bytes</text>
+  <text x="95" y="480" class="text-reg">• deep objects, empty arrays []</text>
+  <text x="95" y="505" class="text-reg">• 1-factor mutation at a time</text>
+  
+  <text x="80" y="540" class="text-accent">B. Malicious Payloads:</text>
+  <text x="95" y="565" class="text-reg">• Cmd Inj: "; rm -rf /", "$(whoami)"</text>
+  <text x="95" y="590" class="text-reg">• Traversal: "../../etc/passwd"</text>
+  <text x="95" y="615" class="text-reg">• Indirect prompt injection text</text>
+
+  <!-- 3. MCP CLIENT -->
+  <g><rect x="60" y="655" width="270" height="160" rx="12" fill="#ebf8ff" />
+<path d="M 57.0 655.0 Q 193.9 656.3 333.0 655.8" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 56.9 654.3 Q 194.6 657.0 332.2 655.9" stroke="#3182ce" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 330.0 652.0 Q 330.3 737.4 329.5 818.0" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 331.5 652.0 Q 329.4 733.9 328.3 816.6" stroke="#3182ce" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 333.0 815.0 Q 195.8 816.4 57.0 814.2" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 332.6 816.5 Q 194.7 812.9 57.1 815.6" stroke="#3182ce" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 60.0 818.0 Q 57.4 736.3 60.7 652.0" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 59.3 818.4 Q 61.1 735.1 59.6 651.8" stroke="#3182ce" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="80" y="690" class="box-title" fill="#2b6cb0">3. MCP Client Wrapper</text>
+  <text x="80" y="725" class="text-reg">• Async Stdio &amp; Docker socket transport</text>
+  <text x="80" y="755" class="text-reg">• Auto-discovery: <tspan font-weight="bold">tools/list</tspan></text>
+  <text x="80" y="785" class="text-reg">• Safe calls: <tspan font-weight="bold">tools/call</tspan> (catches McpError)</text>
+
+  <!-- Arrows between 1 -> 2 -> 3 -->
+  <g><path d="M 195 300 Q 180.0 317.5 195 335" stroke="#319795" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 182.2 329.4 L 195 335 L 191.4 321.5" stroke="#319795" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+  <g><path d="M 195 625 Q 180.0 640.0 195 655" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 181.8 650.4 L 195 655 L 190.4 641.8" stroke="#dd6b20" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+
+  <!-- 4. DOCKER SANDBOX (Large Container) -->
+  <g><rect x="380" y="110" width="480" height="705" rx="12" fill="#f0fff4" />
+<path d="M 377.0 110.0 Q 622.7 112.2 863.0 109.9" stroke="#38a169" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 376.0 111.2 Q 619.1 110.0 864.1 109.3" stroke="#38a169" stroke-width="1.9599999999999997" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 860.0 107.0 Q 860.8 460.4 860.3 818.0" stroke="#38a169" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 860.8 107.1 Q 861.2 462.7 858.8 817.5" stroke="#38a169" stroke-width="1.9599999999999997" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 863.0 815.0 Q 622.6 816.8 377.0 814.0" stroke="#38a169" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 861.7 816.1 Q 621.3 813.7 378.3 812.8" stroke="#38a169" stroke-width="1.9599999999999997" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 380.0 818.0 Q 377.4 464.1 380.0 107.0" stroke="#38a169" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 379.9 818.1 Q 381.0 461.0 379.3 108.1" stroke="#38a169" stroke-width="1.9599999999999997" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="410" y="145" class="title" font-size="24" fill="#22543d">📦 Disposable Docker Sandbox</text>
+  <text x="410" y="172" class="text-reg" fill="#276749">Limits: 256MB RAM | 0.5 CPU | Network Disabled | auto_remove</text>
+
+  <!-- Inside Docker: Target Servers -->
+  <g><rect x="410" y="195" width="420" height="290" rx="12" fill="#ffffff" />
+<path d="M 407.0 195.0 Q 618.3 195.2 833.0 194.8" stroke="#48bb78" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 406.4 196.5 Q 620.9 193.7 833.4 194.7" stroke="#48bb78" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 830.0 192.0 Q 827.7 338.3 830.0 488.0" stroke="#48bb78" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 829.2 191.2 Q 829.4 340.4 828.7 488.4" stroke="#48bb78" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 833.0 485.0 Q 622.4 486.9 407.0 484.5" stroke="#48bb78" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 833.5 484.1 Q 618.3 483.7 405.9 485.8" stroke="#48bb78" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 410.0 488.0 Q 409.9 341.7 410.1 192.0" stroke="#48bb78" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 408.8 487.8 Q 411.3 338.8 409.9 191.9" stroke="#48bb78" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="430" y="230" class="box-title" fill="#276749">Target MCP Server (Under Test)</text>
+  
+  <!-- Healthy Card -->
+  <g><rect x="430" y="245" width="380" height="65" rx="12" fill="#f7fafc" />
+<path d="M 427.0 245.0 Q 621.0 248.1 813.0 245.5" stroke="#4299e1" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 426.5 246.1 Q 618.4 244.8 812.2 244.5" stroke="#4299e1" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 810.0 242.0 Q 809.5 276.2 809.9 313.0" stroke="#4299e1" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 809.8 243.1 Q 808.9 279.2 810.0 311.7" stroke="#4299e1" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 813.0 310.0 Q 622.0 313.3 427.0 311.0" stroke="#4299e1" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 812.0 310.0 Q 621.7 311.9 426.1 310.7" stroke="#4299e1" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 430.0 313.0 Q 428.8 280.4 429.1 242.0" stroke="#4299e1" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 429.9 312.8 Q 428.6 278.6 430.5 243.5" stroke="#4299e1" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="445" y="272" class="text-bold" fill="#2b6cb0">1. Healthy Target</text>
+  <text x="445" y="295" class="text-reg">Clean schema validation, rejects bad inputs cleanly via JSON-RPC</text>
+
+  <!-- Fragile Card -->
+  <g><rect x="430" y="320" width="380" height="75" rx="12" fill="#fff5f5" />
+<path d="M 427.0 320.0 Q 621.3 318.0 813.0 320.1" stroke="#f56565" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 427.2 320.1 Q 619.2 321.9 813.7 318.8" stroke="#f56565" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 810.0 317.0 Q 810.1 359.6 810.2 398.0" stroke="#f56565" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 808.7 316.1 Q 808.7 359.3 810.5 398.5" stroke="#f56565" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 813.0 395.0 Q 617.7 397.1 427.0 394.5" stroke="#f56565" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 813.4 394.8 Q 619.0 395.1 427.3 394.5" stroke="#f56565" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 430.0 398.0 Q 428.7 358.8 430.9 317.0" stroke="#f56565" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 430.5 397.4 Q 429.4 357.1 430.3 317.8" stroke="#f56565" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="445" y="347" class="text-bold" fill="#c53030">2. Fragile Target</text>
+  <text x="445" y="370" class="text-reg">Weak error handling: unhandled KeyError &amp; split(":") IndexError</text>
+  <text x="445" y="388" class="text-accent">Leans into unhandled server crashes &amp; raw stack trace leaks</text>
+
+  <!-- Leaky Card -->
+  <g><rect x="430" y="405" width="380" height="65" rx="12" fill="#fffaf0" />
+<path d="M 427.0 405.0 Q 619.7 407.6 813.0 404.1" stroke="#ed8936" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 426.1 404.3 Q 622.0 402.9 814.3 405.3" stroke="#ed8936" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 810.0 402.0 Q 809.6 435.4 810.8 473.0" stroke="#ed8936" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 810.3 403.5 Q 811.7 438.3 811.2 471.5" stroke="#ed8936" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 813.0 470.0 Q 618.8 471.3 427.0 470.6" stroke="#ed8936" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 811.8 468.8 Q 621.8 468.9 427.2 470.0" stroke="#ed8936" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 430.0 473.0 Q 431.4 435.7 430.2 402.0" stroke="#ed8936" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 430.0 474.2 Q 430.6 436.6 431.2 400.8" stroke="#ed8936" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="445" y="432" class="text-bold" fill="#c05621">3. Leaky Target</text>
+  <text x="445" y="455" class="text-reg">Discloses fake DB_CONNECTION_STRING &amp; file paths via verbose=True</text>
+
+  <!-- Inside Docker: Observer -->
+  <g><rect x="410" y="515" width="420" height="275" rx="12" fill="#fffff0" />
+<path d="M 407.0 515.0 Q 618.7 511.9 833.0 514.8" stroke="#ecc94b" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 406.3 515.7 Q 621.1 515.5 833.2 514.6" stroke="#ecc94b" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 830.0 512.0 Q 827.0 654.8 829.0 793.0" stroke="#ecc94b" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 831.0 512.2 Q 831.1 652.7 828.0 791.9" stroke="#ecc94b" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 833.0 790.0 Q 622.4 791.6 407.0 789.6" stroke="#ecc94b" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 832.1 789.2 Q 621.4 791.4 405.8 790.5" stroke="#ecc94b" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 410.0 793.0 Q 409.8 653.2 410.8 512.0" stroke="#ecc94b" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 411.1 794.4 Q 409.0 654.2 411.7 513.1" stroke="#ecc94b" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="430" y="550" class="box-title" fill="#b7791f">👀 The Container Observer</text>
+  <text x="430" y="580" class="text-bold">• Parallel Live Polling (0.5s loop):</text>
+  <text x="445" y="605" class="text-reg">- Polls container.stats(stream=False) for CPU / RAM</text>
+  <text x="445" y="630" class="text-reg">- Spikes flagged if Peak RAM &gt; 200MB (80% of limit)</text>
+  <text x="445" y="655" class="text-reg">- Detects frozen / hanging containers vs timeout</text>
+  <text x="430" y="690" class="text-bold">• Teardown &amp; Crash Capture:</text>
+  <text x="445" y="715" class="text-reg">- Non-zero exit code → Segfault / unhandled crash</text>
+  <text x="445" y="740" class="text-reg">- Captures stderr logs (tail=10) on abnormal exit</text>
+  <text x="445" y="765" class="text-accent">- Race-safe: handles fast-exit &amp; auto-remove APIErrors</text>
+
+  <!-- Arrow Target to Observer -->
+  <g><path d="M 620 485 Q 605.0 500.0 620 515" stroke="#d69e2e" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 606.8 510.4 L 620 515 L 615.4 501.8" stroke="#d69e2e" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="613.0" y="492.0" font-family="'Caveat', 'Segoe Print', cursive" font-size="16" fill="#d69e2e" font-weight="bold">watches live</text></g>
+
+  <!-- Arrow MCP Client to Target -->
+  <g><path d="M 330 735 Q 384.7 540.5 410 340" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 414.5 353.3 L 410 340 L 402.4 351.7" stroke="#3182ce" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="392.7" y="532.5" font-family="'Caveat', 'Segoe Print', cursive" font-size="16" fill="#3182ce" font-weight="bold">tools/call</text></g>
+
+  <!-- 5. EVALUATION ENGINE -->
+  <g><rect x="900" y="110" width="300" height="440" rx="12" fill="#faf5ff" />
+<path d="M 897.0 110.0 Q 1051.4 108.5 1203.0 109.0" stroke="#9f7aea" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 898.1 110.9 Q 1051.7 110.7 1202.3 109.9" stroke="#9f7aea" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1200.0 107.0 Q 1201.8 332.2 1199.2 553.0" stroke="#9f7aea" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1199.9 106.4 Q 1198.5 331.3 1200.1 552.2" stroke="#9f7aea" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1203.0 550.0 Q 1048.2 548.5 897.0 549.0" stroke="#9f7aea" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1202.3 550.4 Q 1051.5 551.4 896.7 550.5" stroke="#9f7aea" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 900.0 553.0 Q 902.7 327.7 900.1 107.0" stroke="#9f7aea" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 901.4 552.3 Q 901.9 328.7 898.9 106.8" stroke="#9f7aea" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="920" y="145" class="box-title" fill="#6b46c1">4. Evaluation Engine</text>
+  <text x="920" y="175" class="text-bold">Hierarchical Verdict Rules:</text>
+
+  <g><rect x="915" y="190" width="270" height="55" rx="12" fill="#fff5f5" />
+<path d="M 912.0 190.0 Q 1048.9 190.9 1188.0 190.5" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 912.2 189.3 Q 1050.0 189.8 1188.6 189.0" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1185.0 187.0 Q 1185.7 218.8 1185.9 248.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1184.6 185.7 Q 1186.4 218.2 1186.3 247.5" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1188.0 245.0 Q 1052.1 246.1 912.0 244.6" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1187.7 244.7 Q 1049.2 244.1 911.4 243.5" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 915.0 248.0 Q 917.6 218.6 914.8 187.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 914.4 248.1 Q 916.5 218.0 913.3 186.4" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="925" y="215" class="text-bold" fill="#c53030">1. Container Crashed (exit!=0)</text>
+  <text x="925" y="235" class="text-accent">→ CRITICAL (Target process died)</text>
+
+  <g><rect x="915" y="255" width="270" height="55" rx="12" fill="#fff5f5" />
+<path d="M 912.0 255.0 Q 1050.5 255.9 1188.0 254.9" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 911.1 254.9 Q 1049.9 254.7 1189.2 255.7" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1185.0 252.0 Q 1182.2 282.6 1184.3 313.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1186.0 252.8 Q 1185.2 281.8 1184.9 312.2" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1188.0 310.0 Q 1047.1 308.2 912.0 309.4" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1186.7 309.7 Q 1049.9 311.1 912.4 308.5" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 915.0 313.0 Q 915.2 281.0 915.4 252.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 915.8 313.8 Q 915.8 280.5 914.2 251.8" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="925" y="280" class="text-bold" fill="#c53030">2. Timed Out / RAM Spike</text>
+  <text x="925" y="300" class="text-accent">→ CRITICAL (Freeze or OOM leak)</text>
+
+  <g><rect x="915" y="320" width="270" height="55" rx="12" fill="#fffaf0" />
+<path d="M 912.0 320.0 Q 1052.7 319.8 1188.0 319.4" stroke="#fbd38d" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 913.0 319.9 Q 1048.2 318.7 1188.9 319.9" stroke="#fbd38d" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1185.0 317.0 Q 1186.1 350.2 1186.0 378.0" stroke="#fbd38d" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1185.7 317.0 Q 1187.1 348.0 1187.0 378.1" stroke="#fbd38d" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1188.0 375.0 Q 1051.5 375.2 912.0 375.8" stroke="#fbd38d" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1188.4 375.8 Q 1049.0 374.4 912.1 376.2" stroke="#fbd38d" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 915.0 378.0 Q 912.2 346.2 914.5 317.0" stroke="#fbd38d" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 915.1 376.9 Q 913.9 346.8 913.7 317.6" stroke="#fbd38d" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="925" y="345" class="text-bold" fill="#dd6b20">3. Raw Traceback Leaked</text>
+  <text x="925" y="365" class="text-reg" fill="#c05621">→ WARNING (Unhandled exception)</text>
+
+  <g><rect x="915" y="385" width="270" height="55" rx="12" fill="#fff5f5" />
+<path d="M 912.0 385.0 Q 1047.4 384.7 1188.0 385.4" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 911.1 384.8 Q 1050.2 384.9 1189.2 385.7" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1185.0 382.0 Q 1187.3 414.1 1185.4 443.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1184.6 382.8 Q 1184.7 410.5 1186.5 444.4" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1188.0 440.0 Q 1051.5 440.2 912.0 439.8" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1187.2 439.8 Q 1050.4 438.8 910.6 439.3" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 915.0 443.0 Q 914.6 410.5 915.4 382.0" stroke="#feb2b2" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 915.4 441.6 Q 915.0 411.0 915.0 382.2" stroke="#feb2b2" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="925" y="410" class="text-bold" fill="#c53030">4. Leak Regex Matched</text>
+  <text x="925" y="430" class="text-accent">→ CRITICAL (Credentials leaked)</text>
+
+  <g><rect x="915" y="450" width="270" height="55" rx="12" fill="#f0fff4" />
+<path d="M 912.0 450.0 Q 1050.9 447.3 1188.0 449.1" stroke="#9ae6b4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 911.6 449.1 Q 1049.8 447.7 1187.5 449.8" stroke="#9ae6b4" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1185.0 447.0 Q 1186.4 479.5 1184.8 508.0" stroke="#9ae6b4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1183.6 447.1 Q 1183.9 475.8 1186.3 507.5" stroke="#9ae6b4" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1188.0 505.0 Q 1051.7 506.1 912.0 505.3" stroke="#9ae6b4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1187.1 503.6 Q 1051.0 506.9 911.0 504.2" stroke="#9ae6b4" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 915.0 508.0 Q 915.6 475.8 915.3 447.0" stroke="#9ae6b4" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 914.0 508.3 Q 916.0 478.6 916.1 445.8" stroke="#9ae6b4" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="925" y="475" class="text-green">5. Clean Schema Rejection</text>
+  <text x="925" y="495" class="text-green">→ PASSED (Valid schema defense!)</text>
+
+  <text x="920" y="530" class="text-reg" fill="#6b46c1">Rule order evaluates highest severity first.</text>
+
+  <!-- 6. FINAL VERDICT OUTPUT -->
+  <g><rect x="900" y="580" width="300" height="235" rx="12" fill="#ffffff" />
+<path d="M 897.0 580.0 Q 1052.8 578.0 1203.0 580.6" stroke="#2d3748" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 897.5 581.4 Q 1048.1 579.6 1202.7 581.3" stroke="#2d3748" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1200.0 577.0 Q 1200.7 698.3 1199.2 818.0" stroke="#2d3748" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1201.1 577.3 Q 1198.0 698.6 1198.0 819.5" stroke="#2d3748" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1203.0 815.0 Q 1049.1 814.9 897.0 815.6" stroke="#2d3748" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1202.5 816.0 Q 1049.5 815.3 898.0 814.4" stroke="#2d3748" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 900.0 818.0 Q 901.3 699.5 900.9 577.0" stroke="#2d3748" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 900.7 819.4 Q 901.3 697.2 900.2 577.9" stroke="#2d3748" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="920" y="615" class="box-title" fill="#2d3748">5. Final Security Verdict</text>
+  
+  <g><rect x="920" y="635" width="260" height="45" rx="12" fill="#f0fff4" />
+<path d="M 917.0 635.0 Q 1049.9 634.7 1183.0 635.1" stroke="#38a169" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 918.1 636.0 Q 1050.9 634.1 1181.8 636.2" stroke="#38a169" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1180.0 632.0 Q 1179.5 658.2 1179.5 683.0" stroke="#38a169" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1181.1 631.0 Q 1179.3 655.6 1178.6 683.9" stroke="#38a169" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 1183.0 680.0 Q 1052.3 681.0 917.0 679.7" stroke="#38a169" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 1184.3 678.8 Q 1049.1 677.9 917.7 679.6" stroke="#38a169" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/>
+<path d="M 920.0 683.0 Q 921.4 658.4 920.5 632.0" stroke="#38a169" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M 918.8 682.2 Q 920.2 658.7 921.1 631.4" stroke="#38a169" stroke-width="1.54" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.6"/></g>
+  <text x="935" y="663" class="text-green" font-size="21">PASSED (Production Certified)</text>
+  
+  <text x="920" y="705" class="text-bold">• Verdict Model Fields:</text>
+  <text x="935" y="730" class="text-reg">- passed: bool</text>
+  <text x="935" y="755" class="text-reg">- severity: info / warning / critical</text>
+  <text x="935" y="780" class="text-reg">- reasons: list[str] (actionable findings)</text>
+  <text x="935" y="805" class="text-reg">- fuzz_case: reproduction arguments</text>
+
+  <!-- Arrows into Evaluation Engine -->
+  <g><path d="M 830 650 Q 879.5 518.8 900 380" stroke="#b7791f" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 904.2 393.4 L 900 380 L 892.1 391.6" stroke="#b7791f" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+<text x="887.5" y="510.8" font-family="'Caveat', 'Segoe Print', cursive" font-size="16" fill="#b7791f" font-weight="bold">ObserverReport</text></g>
+  <g><path d="M 1050 550 Q 1035.0 565.0 1050 580" stroke="#6b46c1" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+<path d="M 1036.8 575.4 L 1050 580 L 1045.4 566.8" stroke="#6b46c1" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+</g>
+</svg>
